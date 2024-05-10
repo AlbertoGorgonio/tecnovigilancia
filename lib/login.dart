@@ -1,30 +1,61 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tecnovigilancia/onepage.dart'; // Asegúrate de importar correctamente onepage.dart
+import 'package:tecnovigilancia/onepage.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> _signInWithEmailAndPassword() async {
+    try {
+      UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      // Si el inicio de sesión es exitoso, puedes redirigir a la página deseada
+      if (userCredential.user != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => OnePage()),
+        );
+      }
+    } catch (e) {
+      // Manejo de errores de inicio de sesión
+      print('Error de inicio de sesión: $e');
+      // Puedes mostrar un diálogo o un mensaje de error aquí si lo deseas
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      
-      ),
+      appBar: AppBar(),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // Alinea el texto "Sign In" a la izquierda
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                alignment: Alignment.center, // Centra la imagen
+                alignment: Alignment.center,
                 child: SizedBox(
-                  width: 200, // Ancho deseado de la imagen
-                  height: 200, // Altura deseada de la imagen
-                  child: Image.asset('assets/images/sign.gif'), // Corregir la ruta del archivo GIF
+                  width: 200,
+                  height: 200,
+                  child: Image.asset('assets/images/sign.gif'),
                 ),
               ),
-              const SizedBox(height: 20), // Espacio entre la imagen y los campos de texto
+              const SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.only(left: 20), // Añade padding para alinear el texto "Sign In"
+                padding: const EdgeInsets.only(left: 20),
                 child: Text(
                   'Sign In',
                   style: TextStyle(
@@ -34,43 +65,39 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 20), // Espacio entre el texto "Sign In" y los campos de texto
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
                   children: [
                     _buildTextFieldWithIcon(
+                      controller: _emailController,
                       hintText: 'Email',
-                      icon: Icons.email, // Añade un icono de email al campo de texto
+                      icon: Icons.email,
                     ),
-                    const SizedBox(height: 10), // Espacio entre el campo de texto de Email y el de contraseña
+                    const SizedBox(height: 10),
                     _buildTextFieldWithIcon(
+                      controller: _passwordController,
                       hintText: 'Password',
-                      icon: Icons.lock, // Añade un icono de candado al campo de texto de la contraseña
+                      icon: Icons.lock,
                       obscureText: true,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20), // Espacio entre los campos de texto y el botón de Login
+              const SizedBox(height: 20),
               Container(
-                alignment: Alignment.center, // Centra el botón
+                alignment: Alignment.center,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Acción cuando se presiona el botón de Login
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => OnePage()), // Redirige a onepage.dart
-                    );
-                  },
+                  onPressed: _signInWithEmailAndPassword,
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue, // Texto blanco
+                    backgroundColor: Colors.blue,
                   ),
                   child: Text('Login'),
                 ),
               ),
-              const SizedBox(height: 10), // Espacio entre el botón de Login y el texto de "Forgot Password? y Privacy"
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -115,11 +142,13 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _buildTextFieldWithIcon({
+    required TextEditingController controller,
     required String hintText,
     required IconData icon,
     bool obscureText = false,
   }) {
     return TextField(
+      controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(
         hintText: hintText,

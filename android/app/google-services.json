@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "144810312542",
+    "project_id": "appbiomedica-811aa",
+    "storage_bucket": "appbiomedica-811aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144810312542:android:b39f7e411cea83ec8805cf",
+        "android_client_info": {
+          "package_name": "com.example.tecnovigilancia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1b7liEFFVlmM7i5AbhnslRQBbMl6vJQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
