@@ -33,22 +33,24 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'TECNOVIGILANCIA',
-              style: TextStyle(
-                color: Colors.black, // Color negro
-                fontWeight: FontWeight.bold, // Negritas
-                fontFamily: 'Roboto', // Fuente Roboto
-                fontSize: 24, // Ajusta el tamaño del texto
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Text(
+                'TECNOVIGILANCIA',
+                style: TextStyle(
+                  color: Colors.black, // Color negro
+                  fontWeight: FontWeight.bold, // Negritas
+                  fontFamily: 'Roboto', // Fuente Roboto
+                  fontSize: 24, // Ajusta el tamaño del texto
+                ),
               ),
             ),
-            const SizedBox(height: 20),
             Image.asset(
               'assets/images/inicio.gif',
               width: 250, // Ajusta el ancho de la imagen
               height: 250, // Ajusta la altura de la imagen
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 60), // Aumenta el espacio entre la imagen y el botón
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -58,7 +60,7 @@ class MyHomePage extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue, // Color de fondo azul
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Ajuste de padding
+                padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15), // Ajuste de padding
               ),
               child: Text(
                 'Comenzar',
