@@ -26,10 +26,9 @@ class MyApp extends StatelessWidget {
       title: 'Tecnovigilancia',
       theme: ThemeData(
         primaryColor: Colors.blue,
-        // Otros ajustes de tema aquí si los necesitas
       ),
       home: const MyHomePage(),
-      debugShowCheckedModeBanner: false, // Oculta la barra de debug
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -49,19 +48,19 @@ class MyHomePage extends StatelessWidget {
               child: Text(
                 'TECNOVIGILANCIA',
                 style: TextStyle(
-                  color: Colors.black, // Color negro
-                  fontWeight: FontWeight.bold, // Negritas
-                  fontFamily: 'Roboto', // Fuente Roboto
-                  fontSize: 24, // Ajusta el tamaño del texto
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                  fontSize: 24,
                 ),
               ),
             ),
             Image.asset(
               'assets/images/inicio.gif',
-              width: 250, // Ajusta el ancho de la imagen
-              height: 250, // Ajusta la altura de la imagen
+              width: 250,
+              height: 250,
             ),
-            const SizedBox(height: 60), // Aumenta el espacio entre la imagen y el botón
+            const SizedBox(height: 60),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -70,15 +69,15 @@ class MyHomePage extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Color de fondo azul
-                padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15), // Ajuste de padding
+                backgroundColor: Colors.blue,
+                padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
               ),
               child: Text(
                 'Comenzar',
                 style: TextStyle(
-                  color: Colors.white, // Color del texto blanco
-                  fontWeight: FontWeight.bold, // Negritas
-                  fontSize: 16, // Tamaño de fuente ligeramente más grande
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
             ),

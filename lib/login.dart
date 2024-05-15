@@ -38,7 +38,14 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton( // Botón de flecha de retroceso
+          icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.black), // Icono de flecha y color blanco
+          onPressed: () {
+            Navigator.pop(context); // Acción al presionar la flecha de retroceso
+          },
+        ),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
