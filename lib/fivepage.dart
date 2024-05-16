@@ -9,11 +9,11 @@ class FivePage extends StatelessWidget {
         title: Text(
           'Identificación del Reportante',
           style: TextStyle(
-            fontSize: 20, // Tamaño del texto ajustado para que quepa en el appbar
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
-          overflow: TextOverflow.ellipsis, // Para que el texto se trunque si es demasiado largo
+          overflow: TextOverflow.ellipsis,
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.white),

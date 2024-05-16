@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'fivepage.dart'; // Importa la página FivePage
+import 'fivepage.dart';
 
 class FourPage extends StatelessWidget {
   @override
@@ -91,7 +91,7 @@ class FourPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => FivePage()), // Navega a FivePage
+                    MaterialPageRoute(builder: (context) => FivePage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
