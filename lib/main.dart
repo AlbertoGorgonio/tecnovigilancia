@@ -3,17 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'login.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyB1b7liEFFVlmM7i5AbhnslRQBbMl6vJQ8',
-      authDomain: 'appbiomedica.web.app',
-      projectId: 'appbiomedica-811aa',
-      appId: '1:144810312542:android:b39f7e411cea83ec8805cf',
-      messagingSenderId: '144810312542',
-  ),
-  );
   runApp(MyApp());
 }
 
@@ -27,8 +18,102 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: const InitializationScreen(),
       debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class InitializationScreen extends StatefulWidget {
+  const InitializationScreen({Key? key}) : super(key: key);
+
+  @override
+  _InitializationScreenState createState() => _InitializationScreenState();
+}
+
+class _InitializationScreenState extends State<InitializationScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirebase();
+  }
+
+  Future<void> _initializeFirebase() async {
+    try {
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: 'AIzaSyB1b7liEFFVlmM7i5AbhnslRQBbMl6vJQ8',
+          authDomain: 'appbiomedica.web.app',
+          projectId: 'appbiomedica-811aa',
+          appId: '1:144810312542:android:b39f7e411cea83ec8805cf',
+          messagingSenderId: '144810312542',
+        ),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage()),
+      );
+    } catch (e) {
+      // Manejar el error de inicialización de Firebase
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ErrorScreen()),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LoadingScreen();
+  }
+}
+
+// Pantalla de carga personalizada
+class LoadingScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blue.withOpacity(0.5),
+                spreadRadius: 10,
+                blurRadius: 20,
+                offset: Offset(0, 0),
+              ),
+            ],
+          ),
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Pantalla de error personalizada
+class ErrorScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Text(
+          'Error al inicializar Firebase',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+      ),
     );
   }
 }
