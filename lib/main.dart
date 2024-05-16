@@ -35,6 +35,11 @@ class _InitializationScreenState extends State<InitializationScreen> {
   @override
   void initState() {
     super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await Future.delayed(Duration(seconds: 3)); // Espera 3 segundos antes de inicializar Firebase
     _initializeFirebase();
   }
 
