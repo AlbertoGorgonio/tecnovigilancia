@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'fourpage.dart'; // Importa FourPage
 
-class TreePage extends StatelessWidget {
+class TreePage extends StatefulWidget {
+  @override
+  _TreePageState createState() => _TreePageState();
+}
+
+class _TreePageState extends State<TreePage> {
+  String? _selectedOption;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,33 +56,31 @@ class TreePage extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(width: 8.0),
-                GestureDetector(
-                  onTap: () {
-                    // Manejar la selección de "Sí"
-                  },
-                  child: Container(
-                    width: 24.0,
-                    height: 24.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black),
+                Row(
+                  children: [
+                    Radio<String>(
+                      value: 'Sí',
+                      groupValue: _selectedOption,
+                      activeColor: Colors.red,
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedOption = value;
+                        });
+                      },
                     ),
-                    child: Icon(Icons.check, size: 16.0),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-                GestureDetector(
-                  onTap: () {
-                    // Manejar la selección de "No"
-                  },
-                  child: Container(
-                    width: 24.0,
-                    height: 24.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black),
+                    Text('Sí'),
+                    Radio<String>(
+                      value: 'No',
+                      groupValue: _selectedOption,
+                      activeColor: Colors.red,
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedOption = value;
+                        });
+                      },
                     ),
-                  ),
+                    Text('No'),
+                  ],
                 ),
               ],
             ),

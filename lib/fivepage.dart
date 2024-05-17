@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
-class FivePage extends StatelessWidget {
+class FivePage extends StatefulWidget {
+  @override
+  _FivePageState createState() => _FivePageState();
+}
+
+class _FivePageState extends State<FivePage> {
+  bool _isAligned = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +85,9 @@ class FivePage extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Acción al presionar el botón "Enviar reporte"
+                  setState(() {
+                    _isAligned = !_isAligned;
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -91,6 +100,32 @@ class FivePage extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+            SizedBox(height: 24.0),
+            Stack(
+              children: [
+                AnimatedAlign(
+                  alignment: _isAligned ? Alignment.center : Alignment.bottomLeft,
+                  duration: Duration(seconds: 1),
+                  curve: Curves.easeInOut,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: AnimatedOpacity(
+                      opacity: _isAligned ? 1.0 : 0.0,
+                      duration: Duration(seconds: 1),
+                      child: AnimatedScale(
+                        scale: _isAligned ? 1.0 : 0.0,
+                        duration: Duration(seconds: 1),
+                        child: Image.asset(
+                          'assets/images/send.png',
+                          width: 200,
+                          height: 200,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

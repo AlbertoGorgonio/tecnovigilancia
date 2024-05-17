@@ -91,7 +91,7 @@ class _SecondPageState extends State<SecondPage> {
                 Icon(Icons.error, color: Colors.red, size: 40), // Cambio de icono a uno relacionado con la detección de accidentes
                 SizedBox(width: 16.0),
                 Text(
-                  'Detección del Accidente',
+                  'Detección del Accidente(Selecciona)',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
