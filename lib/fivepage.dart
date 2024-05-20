@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+import 'main.dart'; // Importa el archivo main.dart
 
 class FivePage extends StatefulWidget {
   @override
@@ -7,6 +11,30 @@ class FivePage extends StatefulWidget {
 
 class _FivePageState extends State<FivePage> {
   bool _isAligned = false;
+
+  void _showSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.blue.withOpacity(0.8), // Color de fondo con opacidad
+        elevation: 6, // Añade sombra al SnackBar
+        content: Text(
+          'Reporte enviado con éxito',
+          style: TextStyle(color: Colors.white), // Color del texto
+        ),
+        duration: Duration(seconds: 4),
+      ),
+    );
+  }
+
+  void _startAnimation() {
+    setState(() {
+      _isAligned = !_isAligned;
+    });
+    _showSnackBar(context);
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyApp())); // Redirige a main.dart
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +113,7 @@ class _FivePageState extends State<FivePage> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    _isAligned = !_isAligned;
-                  });
+                  _startAnimation();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
