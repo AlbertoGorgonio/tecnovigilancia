@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'main.dart'; // Importa el archivo main.dart
+import 'main.dart';
 
 class FivePage extends StatefulWidget {
   @override
@@ -11,15 +11,29 @@ class FivePage extends StatefulWidget {
 
 class _FivePageState extends State<FivePage> {
   bool _isAligned = false;
+  bool _isVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animateElements();
+  }
+
+  void _animateElements() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    setState(() {
+      _isVisible = true;
+    });
+  }
 
   void _showSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Colors.blue.withOpacity(0.8), // Color de fondo con opacidad
-        elevation: 6, // Añade sombra al SnackBar
+        backgroundColor: Colors.blue.withOpacity(0.8),
+        elevation: 6,
         content: Text(
           'Reporte enviado con éxito',
-          style: TextStyle(color: Colors.white), // Color del texto
+          style: TextStyle(color: Colors.white),
         ),
         duration: Duration(seconds: 4),
       ),
@@ -32,8 +46,29 @@ class _FivePageState extends State<FivePage> {
     });
     _showSnackBar(context);
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyApp())); // Redirige a main.dart
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => MyApp()));
     });
+  }
+
+  Widget _buildAnimatedElement(Widget child, int index, Alignment alignment) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(seconds: 1),
+      curve: Curves.easeInOut,
+      builder: (context, value, child) {
+        return Transform.translate(
+          offset:
+              Offset(alignment.x * (1 - value) * MediaQuery.of(context).size.width, 0),
+          child: child,
+        );
+      },
+      child: AnimatedOpacity(
+        opacity: _isVisible ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 500),
+        child: child,
+      ),
+    );
   }
 
   @override
@@ -42,9 +77,9 @@ class _FivePageState extends State<FivePage> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-          'Identificación del Reportante',
+          'Identificacion de quien toma el reporte',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -62,69 +97,150 @@ class _FivePageState extends State<FivePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Nombre',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            _buildAnimatedElement(
+              Text(
+                'Nombre',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              0,
+              Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
+            _buildAnimatedElement(
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
               ),
+              1,
+              Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
-            Text(
-              'Profesión/Cargo',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            _buildAnimatedElement(
+              Text(
+                'Profesión/Cargo',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              2,
+              Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
-            DropdownButtonFormField<String>(
-              items: ['Médico', 'Enfermero', 'Camillero', 'Otro'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? value) {},
+            _buildAnimatedElement(
+              DropdownButtonFormField<String>(
+                items: ['Médico', 'Enfermero', 'Camillero', 'Otro'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? value) {},
+              ),
+              3,
+              Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
-            Text(
-              'Teléfono o Extensión',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            _buildAnimatedElement(
+              Text(
+                'Teléfono o Extensión',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              4,
+              Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
+            _buildAnimatedElement(
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
               ),
+              5,
+              Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
-            Text(
-              'Correo',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            _buildAnimatedElement(
+              Text(
+                'Correo',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              6,
+              Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
+            _buildAnimatedElement(
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
               ),
+              7,
+              Alignment.centerRight,
+            ),
+            SizedBox(height: 16.0),
+            _buildAnimatedElement(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Adjuntar Foto',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  GestureDetector(
+                    onTap: () {
+                      // Acción para adjuntar foto
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(12.0),
+                        color: Colors.blue[50],
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.photo_camera, color: Colors.blue),
+                          SizedBox(width: 8.0),
+                          Text(
+                            'Subir Foto',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              8,
+              Alignment.centerLeft,
             ),
             SizedBox(height: 24.0),
             Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  _startAnimation();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                ),
-                child: Text(
-                  'Enviar Reporte',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              child: _buildAnimatedElement(
+                ElevatedButton(
+                  onPressed: () {
+                    _startAnimation();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: Text(
+                    'Enviar Reporte',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
+                9,
+                Alignment.center,
               ),
             ),
             SizedBox(height: 24.0),

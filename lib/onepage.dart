@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'secondpage.dart'; // Importa la segunda página
+import 'secondpage.dart';
 
 class OnePage extends StatefulWidget {
   @override
@@ -10,6 +10,41 @@ class OnePage extends StatefulWidget {
 class _OnePageState extends State<OnePage> {
   TextEditingController _fechaNotificacionController = TextEditingController();
   TextEditingController _fechaIncidenteController = TextEditingController();
+  bool _isVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _setFechaNotificacion();
+    _generateCodigoReporte();
+    _animateElements();
+  }
+
+  void _setFechaNotificacion() {
+    DateTime now = DateTime.now();
+    String formattedDate = "${now.year}-${_twoDigits(now.month)}-${_twoDigits(now.day)}";
+    _fechaNotificacionController.text = formattedDate;
+  }
+
+  String _codigoReporte = '';
+
+  void _generateCodigoReporte() {
+    setState(() {
+      _codigoReporte = 'HRAEI/UTV/01/2024';
+    });
+  }
+
+  void _animateElements() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    setState(() {
+      _isVisible = true;
+    });
+  }
+
+  String _twoDigits(int n) {
+    if (n >= 10) return "$n";
+    return "0$n";
+  }
 
   @override
   void dispose() {
@@ -18,25 +53,44 @@ class _OnePageState extends State<OnePage> {
     super.dispose();
   }
 
+  Widget _buildAnimatedElement(Widget child, int index, Alignment alignment) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(seconds: 1),
+      curve: Curves.easeInOut,
+      builder: (context, value, child) {
+        return Transform.translate(
+          offset: Offset(alignment.x * (1 - value) * MediaQuery.of(context).size.width, 0),
+          child: child,
+        );
+      },
+      child: AnimatedOpacity(
+        opacity: _isVisible ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 500),
+        child: child,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue, // Color del appbar
-        title: Center( // Centro el título del appbar
+        backgroundColor: Colors.blue,
+        title: Center(
           child: Text(
             'Reporte de incidencias',
             style: TextStyle(
-              fontSize: 20, // Tamaño del texto del appbar
+              fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.white, // Color del texto del appbar
+              color: Colors.white,
             ),
           ),
         ),
-        leading: IconButton( // Botón de flecha de retroceso
-          icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.white), // Icono de flecha y color blanco
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context); // Acción al presionar la flecha de retroceso
+            Navigator.pop(context);
           },
         ),
       ),
@@ -46,41 +100,39 @@ class _OnePageState extends State<OnePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                'Código de reporte',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              _buildAnimatedElement(
+                Text(
+                  'Código de reporte',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                0,
+                Alignment.centerLeft,
               ),
               SizedBox(height: 8),
-              TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Código de reporte',
+              _buildAnimatedElement(
+                TextField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Código de reporte',
+                    hintText: _codigoReporte,
+                  ),
                 ),
+                1,
+                Alignment.centerRight,
               ),
               SizedBox(height: 16),
-              Text(
-                'Fecha de notificación',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              _buildAnimatedElement(
+                Text(
+                  'Fecha de notificación',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                2,
+                Alignment.centerLeft,
               ),
               SizedBox(height: 8),
-              InkWell(
-                onTap: () {
-                  // Aquí puedes abrir un selector de fechas o un calendario
-                  showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime(2030),
-                  ).then((selectedDate) {
-                    if (selectedDate != null) {
-                      setState(() {
-                        _fechaNotificacionController.text =
-                            selectedDate.toString();
-                      });
-                    }
-                  });
-                },
-                child: AbsorbPointer(
+              _buildAnimatedElement(
+                AbsorbPointer(
                   child: TextField(
                     controller: _fechaNotificacionController,
                     decoration: InputDecoration(
@@ -90,87 +142,84 @@ class _OnePageState extends State<OnePage> {
                     ),
                   ),
                 ),
+                3,
+                Alignment.centerRight,
               ),
               SizedBox(height: 16),
-              Text(
-                'Fecha de incidente',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              _buildAnimatedElement(
+                Text(
+                  'Fecha de incidente',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                4,
+                Alignment.centerLeft,
               ),
               SizedBox(height: 8),
-              InkWell(
-                onTap: () {
-                  // Aquí puedes abrir un selector de fechas o un calendario
-                  showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime(2030),
-                  ).then((selectedDate) {
-                    if (selectedDate != null) {
-                      setState(() {
-                        _fechaIncidenteController.text =
-                            selectedDate.toString();
-                      });
-                    }
-                  });
-                },
-                child: AbsorbPointer(
-                  child: TextField(
-                    controller: _fechaIncidenteController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Fecha de incidente',
-                      suffixIcon: Icon(Icons.calendar_today),
+              _buildAnimatedElement(
+                InkWell(
+                  onTap: () {
+                    showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime(2030),
+                    ).then((selectedDate) {
+                      if (selectedDate != null) {
+                        setState(() {
+                          _fechaIncidenteController.text = "${selectedDate.year}-${_twoDigits(selectedDate.month)}-${_twoDigits(selectedDate.day)}";
+                        });
+                      }
+                    });
+                  },
+                  child: AbsorbPointer(
+                    child: TextField(
+                      controller: _fechaIncidenteController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Fecha de incidente',
+                        suffixIcon: Icon(Icons.calendar_today),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 16),
-              Text(
-                'Servicio o lugar donde ocurre el incidente',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Seleccionar un área',
-                ),
-                items: <String>['Área 1', 'Área 2', 'Área 3'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {},
+                5,
+                Alignment.centerRight,
               ),
               SizedBox(height: 32),
               Center(
                 child: Column(
                   children: [
-                    Image.asset(
-                      'assets/images/hospi.png', // Ruta de la imagen
-                      width: 200,
-                      height: 200,
+                    _buildAnimatedElement(
+                      Image.asset(
+                        'assets/images/ad.png',
+                        width: 200,
+                        height: 200,
+                      ),
+                      8,
+                      Alignment.center,
                     ),
                     SizedBox(height: 16),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue, // Color del botón
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SecondPage()),
-                        );
-                      },
-                      child: Text(
-                        'Continuar',
-                        style: TextStyle(
-                          color: Colors.white, // Color del texto del botón
-                          fontWeight: FontWeight.bold,
+                    _buildAnimatedElement(
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SecondPage()),
+                          );
+                        },
+                        child: Text(
+                          'Continuar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
+                      9,
+                      Alignment.center,
                     ),
                   ],
                 ),

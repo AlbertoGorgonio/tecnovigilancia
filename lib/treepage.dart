@@ -9,6 +9,55 @@ class TreePage extends StatefulWidget {
 
 class _TreePageState extends State<TreePage> {
   String? _selectedOption;
+  String? _selectedCause;
+  DateTime? _selectedExpiryDate;
+  bool _isVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animateElements();
+  }
+
+  void _animateElements() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    setState(() {
+      _isVisible = true;
+    });
+  }
+
+  Widget _buildAnimatedElement(Widget child, int index, Alignment alignment) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(seconds: 1),
+      curve: Curves.easeInOut,
+      builder: (context, value, child) {
+        return Transform.translate(
+          offset: Offset(alignment.x * (1 - value) * MediaQuery.of(context).size.width, 0),
+          child: child,
+        );
+      },
+      child: AnimatedOpacity(
+        opacity: _isVisible ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 500),
+        child: child,
+      ),
+    );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedExpiryDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null && pickedDate != _selectedExpiryDate) {
+      setState(() {
+        _selectedExpiryDate = pickedDate;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +67,7 @@ class _TreePageState extends State<TreePage> {
         title: Text(
           'Identificación del Dispositivo Médico',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -35,121 +84,235 @@ class _TreePageState extends State<TreePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Desenlace',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            _buildAnimatedElement(
+              Text(
+                'Desenlace(s) que aplique(n)',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              0,
+              Alignment.centerLeft,
             ),
-            DropdownButtonFormField<String>(
-              items: ['Muerte', 'Complicaciones', 'Otro'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? value) {},
+            SizedBox(height: 8.0),
+            _buildAnimatedElement(
+              DropdownButtonFormField<String>(
+                items: [
+                  'Muerte',
+                  'Intervención médica o quirúrgica',
+                  'Daño de una función o estructura corporal',
+                  'Hospitalización inicial o prolongada',
+                  'Enfermedad o daño que amenace la vida',
+                  'No hubo daño o lesión',
+                  'Otro, ¿cuál?'
+                ].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? value) {},
+              ),
+              1,
+              Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
-            Row(
-              children: [
-                Text(
-                  '¿Se detectó la causa?',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+            _buildAnimatedElement(
+              Row(
+                children: [
+                  Text(
+                    '¿Se detectó la causa?',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(width: 8.0),
+                  Row(
+                    children: [
+                      Radio<String>(
+                        value: 'Sí',
+                        groupValue: _selectedOption,
+                        activeColor: Colors.red,
+                        onChanged: (String? value) {
+                          setState(() {
+                            _selectedOption = value;
+                          });
+                        },
+                      ),
+                      Text('Sí'),
+                      Radio<String>(
+                        value: 'No',
+                        groupValue: _selectedOption,
+                        activeColor: Colors.red,
+                        onChanged: (String? value) {
+                          setState(() {
+                            _selectedOption = value;
+                          });
+                        },
+                      ),
+                      Text('No'),
+                    ],
+                  ),
+                ],
+              ),
+              2,
+              Alignment.centerLeft,
+            ),
+            SizedBox(height: 16.0),
+            if (_selectedOption == 'Sí')
+              _buildAnimatedElement(
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Seleccionar causa',
+                  ),
+                  items: [
+                    'Calidad',
+                    'Diseño',
+                    'Condiciones de almacenamiento',
+                    'Error de uso',
+                    'Instrucciones para uso y etiquetado',
+                    'Mantenimiento y/o calibración',
+                    'Otro, ¿cuál?'
+                  ].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      _selectedCause = value;
+                    });
+                  },
                 ),
-                SizedBox(width: 8.0),
-                Row(
-                  children: [
-                    Radio<String>(
-                      value: 'Sí',
-                      groupValue: _selectedOption,
-                      activeColor: Colors.red,
-                      onChanged: (String? value) {
-                        setState(() {
-                          _selectedOption = value;
-                        });
-                      },
-                    ),
-                    Text('Sí'),
-                    Radio<String>(
-                      value: 'No',
-                      groupValue: _selectedOption,
-                      activeColor: Colors.red,
-                      onChanged: (String? value) {
-                        setState(() {
-                          _selectedOption = value;
-                        });
-                      },
-                    ),
-                    Text('No'),
-                  ],
+                3,
+                Alignment.centerRight,
+              ),
+            SizedBox(height: 16.0),
+            _buildAnimatedElement(
+              Text(
+                'Datos del Dispositivo Médico',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              4,
+              Alignment.centerLeft,
+            ),
+            SizedBox(height: 8.0),
+            _buildAnimatedElement(
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Nombre del dispositivo medico',
+                  border: OutlineInputBorder(),
                 ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              'Datos del Dispositivo Médico',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Nombre',
-                border: OutlineInputBorder(),
               ),
+              5,
+              Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Registro',
-                border: OutlineInputBorder(),
+            _buildAnimatedElement(
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Clave de HRAEI',
+                  border: OutlineInputBorder(),
+                ),
               ),
+              6,
+              Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Marca',
-                border: OutlineInputBorder(),
+            _buildAnimatedElement(
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Numero de registro sanitario',
+                  border: OutlineInputBorder(),
+                ),
               ),
+              7,
+              Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Lote',
-                border: OutlineInputBorder(),
+            _buildAnimatedElement(
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Clasificacion del dispositivo medico de acuerdo a su categoria de uso',
+                  border: OutlineInputBorder(),
+                ),
               ),
+              8,
+              Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Clasificación',
-                border: OutlineInputBorder(),
+            _buildAnimatedElement(
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Marca',
+                  border: OutlineInputBorder(),
+                ),
               ),
+              9,
+              Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Fecha de Caducidad',
-                border: OutlineInputBorder(),
+            _buildAnimatedElement(
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Lote o Serie',
+                  border: OutlineInputBorder(),
+                ),
               ),
+              10,
+              Alignment.centerRight,
+            ),
+            SizedBox(height: 8.0),
+            _buildAnimatedElement(
+              TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Fecha de caducidad',
+                  border: OutlineInputBorder(),
+                ),
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedExpiryDate ?? DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                  );
+                  if (pickedDate != null) {
+                    setState(() {
+                      _selectedExpiryDate = pickedDate;
+                    });
+                  }
+                },
+                controller: TextEditingController(
+                  text: _selectedExpiryDate == null
+                      ? ''
+                      : "${_selectedExpiryDate!.day}/${_selectedExpiryDate!.month}/${_selectedExpiryDate!.year}",
+                ),
+              ),
+              11,
+              Alignment.centerRight,
             ),
             SizedBox(height: 24.0),
             Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => FourPage()), // Navega a FourPage
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                ),
-                child: Text(
-                  'Continuar',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              child: _buildAnimatedElement(
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FourPage()), // Navega a FourPage
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: Text(
+                    'Continuar',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
+                12,
+                Alignment.center,
               ),
             ),
           ],
