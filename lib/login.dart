@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tecnovigilancia/create.dart'; // Asegúrate de importar el archivo create.dart
+import 'package:tecnovigilancia/forgot.dart';
 import 'package:tecnovigilancia/onepage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -39,10 +41,10 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton( // Botón de flecha de retroceso
-          icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.black), // Icono de flecha y color blanco
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context); // Acción al presionar la flecha de retroceso
+            Navigator.pop(context);
           },
         ),
       ),
@@ -110,10 +112,13 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      // Acción cuando se presiona el texto "Forgot Password?"
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForgotPage()),
+                      );
                     },
                     child: Text(
-                      'Forgot Password?',
+                      'Olvidaste tu contraseña?',
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
@@ -129,10 +134,13 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Acción cuando se presiona el texto "Privacy"
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CreatePage()),
+                      );
                     },
                     child: Text(
-                      'Privacy',
+                      'Crea tu cuenta',
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,

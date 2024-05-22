@@ -1,6 +1,9 @@
-import 'dart:async';
+import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'main.dart';
 
@@ -12,6 +15,9 @@ class FivePage extends StatefulWidget {
 class _FivePageState extends State<FivePage> {
   bool _isAligned = false;
   bool _isVisible = false;
+  File? _image;
+
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -25,6 +31,44 @@ class _FivePageState extends State<FivePage> {
       _isVisible = true;
     });
   }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('Nada seleccionado');
+      }
+    });
+  }
+
+Future<void> _uploadImage() async {
+  try {
+    if (_image != null) {
+      Reference ref = FirebaseStorage.instance.ref().child('uploads/${FirebaseAuth.instance.currentUser!.uid}.jpg');
+      UploadTask uploadTask = ref.putFile(_image!);
+      
+      uploadTask.whenComplete(() async {
+        try {
+          String imageURL = await ref.getDownloadURL();
+          User? user = FirebaseAuth.instance.currentUser;
+          await user?.updatePhotoURL(imageURL);
+          setState(() {
+            // Actualiza el estado si es necesario
+          });
+          print('Image uploaded successfully.');
+        } catch (e) {
+          print('Error getting download URL: $e');
+        }
+      });
+    } else {
+      print('No image selected.');
+    }
+  } catch (e) {
+    print('Error uploading image: $e');
+}
+}
 
   void _showSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -190,9 +234,7 @@ class _FivePageState extends State<FivePage> {
                   ),
                   SizedBox(height: 8.0),
                   GestureDetector(
-                    onTap: () {
-                      // Acción para adjuntar foto
-                    },
+                    onTap: _pickImage,
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.blue),
@@ -216,6 +258,10 @@ class _FivePageState extends State<FivePage> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 8.0),
+                  _image != null
+                      ? Image.file(_image!, height: 200)
+                      : Container(),
                 ],
               ),
               8,
@@ -226,7 +272,7 @@ class _FivePageState extends State<FivePage> {
               child: _buildAnimatedElement(
                 ElevatedButton(
                   onPressed: () {
-                    _startAnimation();
+                    _uploadImage().then((_) => _startAnimation());
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,

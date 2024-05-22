@@ -231,11 +231,17 @@ class _SecondPageState extends State<SecondPage> {
             // Campo "IDENTIFICACION DEL PACIENTE"
             _buildAnimatedElement(
               Container(
+                width: double.infinity,
                 color: Colors.blue,
                 padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'IDENTIFICACION DEL PACIENTE',
-                  style: TextStyle(color: Colors.white),
+                child: Center(
+                  child: Text(
+                    'Identificación del paciente',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
               8,
