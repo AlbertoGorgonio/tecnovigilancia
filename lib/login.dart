@@ -57,8 +57,8 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 alignment: Alignment.center,
                 child: SizedBox(
-                  width: 200,
-                  height: 200,
+                  width: 300,
+                  height: 300,
                   child: Image.asset('assets/images/sign.gif'),
                 ),
               ),

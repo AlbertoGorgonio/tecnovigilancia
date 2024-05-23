@@ -147,8 +147,8 @@ class MyHomePage extends StatelessWidget {
             ),
             Image.asset(
               'assets/images/inicio.gif',
-              width: 250,
-              height: 250,
+              width: 300,
+              height: 300,
             ),
             const SizedBox(height: 60),
             ElevatedButton(
