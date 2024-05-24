@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,11 @@ class _FivePageState extends State<FivePage> {
   File? _image;
 
   final ImagePicker _picker = ImagePicker();
+  TextEditingController _reporterNameController = TextEditingController();
+  TextEditingController _reporterPositionController = TextEditingController();
+  TextEditingController _reporterPhoneController = TextEditingController();
+  TextEditingController _reporterEmailController = TextEditingController();
+  String? _selectedProfession;
 
   @override
   void initState() {
@@ -43,32 +49,43 @@ class _FivePageState extends State<FivePage> {
     });
   }
 
-Future<void> _uploadImage() async {
-  try {
-    if (_image != null) {
-      Reference ref = FirebaseStorage.instance.ref().child('uploads/${FirebaseAuth.instance.currentUser!.uid}.jpg');
-      UploadTask uploadTask = ref.putFile(_image!);
-      
-      uploadTask.whenComplete(() async {
-        try {
-          String imageURL = await ref.getDownloadURL();
-          User? user = FirebaseAuth.instance.currentUser;
-          await user?.updatePhotoURL(imageURL);
-          setState(() {
-            // Actualiza el estado si es necesario
-          });
-          print('Image uploaded successfully.');
-        } catch (e) {
-          print('Error getting download URL: $e');
-        }
-      });
-    } else {
-      print('No image selected.');
+  Future<void> _uploadImage() async {
+    try {
+      if (_image != null) {
+        Reference ref = FirebaseStorage.instance.ref().child('uploads/${FirebaseAuth.instance.currentUser!.uid}/${DateTime.now().millisecondsSinceEpoch}.jpg');
+        UploadTask uploadTask = ref.putFile(_image!);
+        
+        uploadTask.whenComplete(() async {
+          try {
+            String imageURL = await ref.getDownloadURL();
+            await _saveForm(imageURL);
+            print('Image uploaded successfully.');
+          } catch (e) {
+            print('Error getting download URL: $e');
+          }
+        });
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
     }
-  } catch (e) {
-    print('Error uploading image: $e');
-}
-}
+  }
+
+  Future<void> _saveForm(String imageUrl) async {
+    try {
+      await FirebaseFirestore.instance.collection('Formulario').doc('Registros').set({
+        'nombre_reportante': _reporterNameController.text,
+        'profesion_cargo': _selectedProfession,
+        'telefono_ext': _reporterPhoneController.text,
+        'correo1': _reporterEmailController.text,
+        'imagen_url': imageUrl,
+      });
+      print('Datos guardados correctamente');
+    } catch (e) {
+      print('Error al guardar los datos: $e');
+    }
+  }
 
   void _showSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -116,12 +133,21 @@ Future<void> _uploadImage() async {
   }
 
   @override
+  void dispose() {
+    _reporterNameController.dispose();
+    _reporterPositionController.dispose();
+    _reporterPhoneController.dispose();
+    _reporterEmailController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-          'Identificacion de quien toma el reporte',
+          'Identificación de quien toma el reporte',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -152,6 +178,7 @@ Future<void> _uploadImage() async {
             SizedBox(height: 8.0),
             _buildAnimatedElement(
               TextField(
+                controller: _reporterNameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
@@ -177,7 +204,14 @@ Future<void> _uploadImage() async {
                     child: Text(value),
                   );
                 }).toList(),
-                onChanged: (String? value) {},
+                onChanged: (String? value) {
+                  setState(() {
+                    _selectedProfession = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
               ),
               3,
               Alignment.centerRight,
@@ -194,6 +228,7 @@ Future<void> _uploadImage() async {
             SizedBox(height: 8.0),
             _buildAnimatedElement(
               TextField(
+                controller: _reporterPhoneController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
@@ -213,8 +248,8 @@ Future<void> _uploadImage() async {
             SizedBox(height: 8.0),
             _buildAnimatedElement(
               TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                controller: _reporterEmailController,
+                decoration: InputDecoration(                  border: OutlineInputBorder(),
                 ),
               ),
               7,

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'secondpage.dart';
@@ -51,6 +52,19 @@ class _OnePageState extends State<OnePage> {
     _fechaNotificacionController.dispose();
     _fechaIncidenteController.dispose();
     super.dispose();
+  }
+
+  Future<void> _saveForm() async {
+    try {
+      await FirebaseFirestore.instance.collection('Formulario').doc('Registros').set({
+        'codigo_reporte': _codigoReporte,
+        'fecha_notificacion': _fechaNotificacionController.text,
+        'fecha_incidente': _fechaIncidenteController.text,
+      });
+      print('Datos guardados correctamente');
+    } catch (e) {
+      print('Error al guardar los datos: $e');
+    }
   }
 
   Widget _buildAnimatedElement(Widget child, int index, Alignment alignment) {
@@ -204,7 +218,8 @@ class _OnePageState extends State<OnePage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          await _saveForm();
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => SecondPage()),

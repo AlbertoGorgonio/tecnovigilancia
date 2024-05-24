@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'treepage.dart';
@@ -12,6 +13,11 @@ class _SecondPageState extends State<SecondPage> {
   String? _selectedHealthProfessionalAffected;
   String? _selectedIncidentType;
   String? _selectedGender;
+  String? _selectedArea;
+  TextEditingController _healthProfessionalNameController = TextEditingController();
+  TextEditingController _patientNameController = TextEditingController();
+  TextEditingController _patientAgeController = TextEditingController();
+  TextEditingController _incidentDescriptionController = TextEditingController();
   bool _isVisible = false;
 
   @override
@@ -25,6 +31,25 @@ class _SecondPageState extends State<SecondPage> {
     setState(() {
       _isVisible = true;
     });
+  }
+
+  Future<void> _saveForm() async {
+    try {
+      await FirebaseFirestore.instance.collection('Formulario').doc('Registros').set({
+        'servicio_lugar_incidente': _selectedArea,
+        'deteccion_accidente': _selectedDetectionPeriod,
+        'profesional_salud_afectado': _selectedHealthProfessionalAffected,
+        'nombre_profesional_salud': _healthProfessionalNameController.text,
+        'nombre_paciente': _patientNameController.text,
+        'edad_paciente': _patientAgeController.text,
+        'genero_paciente': _selectedGender,
+        'tipo_incidente': _selectedIncidentType,
+        'descripcion_incidente': _incidentDescriptionController.text,
+      });
+      print('Datos guardados correctamente');
+    } catch (e) {
+      print('Error al guardar los datos: $e');
+    }
   }
 
   Widget _buildAnimatedElement(Widget child, int index, Alignment alignment) {
@@ -44,6 +69,15 @@ class _SecondPageState extends State<SecondPage> {
         child: child,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _healthProfessionalNameController.dispose();
+    _patientNameController.dispose();
+    _patientAgeController.dispose();
+    _incidentDescriptionController.dispose();
+    super.dispose();
   }
 
   @override
@@ -71,7 +105,6 @@ class _SecondPageState extends State<SecondPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Campo "Servicio o lugar donde ocurre el incidente"
             _buildAnimatedElement(
               Text(
                 'Servicio o lugar donde ocurre el incidente',
@@ -93,13 +126,16 @@ class _SecondPageState extends State<SecondPage> {
                     child: Text(value),
                   );
                 }).toList(),
-                onChanged: (String? newValue) {},
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedArea = newValue;
+                  });
+                },
               ),
               1,
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
-            // Campo "Detección del accidente (Seleccionar)" con icono
             _buildAnimatedElement(
               Row(
                 children: [
@@ -167,7 +203,6 @@ class _SecondPageState extends State<SecondPage> {
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
-            // Campo "¿Profesional de la salud se ve afectado?"
             _buildAnimatedElement(
               Text(
                 '¿Profesional de la salud se ve afectado?',
@@ -208,7 +243,6 @@ class _SecondPageState extends State<SecondPage> {
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
-            // Campo "Nombre del profesional de la salud"
             _buildAnimatedElement(
               Text(
                 'Nombre del Profesional de la Salud',
@@ -220,6 +254,7 @@ class _SecondPageState extends State<SecondPage> {
             SizedBox(height: 8.0),
             _buildAnimatedElement(
               TextField(
+                controller: _healthProfessionalNameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                 ),
@@ -228,7 +263,6 @@ class _SecondPageState extends State<SecondPage> {
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
-            // Campo "IDENTIFICACION DEL PACIENTE"
             _buildAnimatedElement(
               Container(
                 width: double.infinity,
@@ -250,6 +284,7 @@ class _SecondPageState extends State<SecondPage> {
             SizedBox(height: 16.0),
             _buildAnimatedElement(
               TextField(
+                controller: _patientNameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Nombre completo',
@@ -261,6 +296,7 @@ class _SecondPageState extends State<SecondPage> {
             SizedBox(height: 16.0),
             _buildAnimatedElement(
               TextField(
+                controller: _patientAgeController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Edad',
@@ -292,7 +328,6 @@ class _SecondPageState extends State<SecondPage> {
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
-            // Campo "Descripción de Incidente / Incidente Adverso" solo título
             _buildAnimatedElement(
               Text(
                 'Descripción de Incidente / Incidente Adverso',
@@ -343,6 +378,7 @@ class _SecondPageState extends State<SecondPage> {
             SizedBox(height: 16.0),
             _buildAnimatedElement(
               TextField(
+                controller: _incidentDescriptionController,
                 maxLines: 5,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -356,7 +392,8 @@ class _SecondPageState extends State<SecondPage> {
             Center(
               child: _buildAnimatedElement(
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await _saveForm();
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => TreePage()),

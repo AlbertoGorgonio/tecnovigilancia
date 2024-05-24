@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'fivepage.dart';
@@ -9,6 +10,12 @@ class FourPage extends StatefulWidget {
 
 class _FourPageState extends State<FourPage> {
   bool _isVisible = false;
+  TextEditingController _managementController = TextEditingController();
+  TextEditingController _actionsController = TextEditingController();
+  TextEditingController _reporterNameController = TextEditingController();
+  TextEditingController _reporterPositionController = TextEditingController();
+  TextEditingController _reporterPhoneController = TextEditingController();
+  TextEditingController _reporterEmailController = TextEditingController();
 
   @override
   void initState() {
@@ -40,6 +47,33 @@ class _FourPageState extends State<FourPage> {
         child: child,
       ),
     );
+  }
+
+  Future<void> _saveForm() async {
+    try {
+      await FirebaseFirestore.instance.collection('Formulario').doc('Registros').set({
+        'gestion_realizada': _managementController.text,
+        'acciones_correctivas_preventivas': _actionsController.text,
+        'nombre_reportante': _reporterNameController.text,
+        'profesion_cargo': _reporterPositionController.text,
+        'telefono_ext': _reporterPhoneController.text,
+        'correo': _reporterEmailController.text,
+      });
+      print('Datos guardados correctamente');
+    } catch (e) {
+      print('Error al guardar los datos: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _managementController.dispose();
+    _actionsController.dispose();
+    _reporterNameController.dispose();
+    _reporterPositionController.dispose();
+    _reporterPhoneController.dispose();
+    _reporterEmailController.dispose();
+    super.dispose();
   }
 
   @override
@@ -79,6 +113,7 @@ class _FourPageState extends State<FourPage> {
             SizedBox(height: 8.0),
             _buildAnimatedElement(
               TextField(
+                controller: _managementController,
                 maxLines: 5,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -99,6 +134,7 @@ class _FourPageState extends State<FourPage> {
             SizedBox(height: 8.0),
             _buildAnimatedElement(
               TextField(
+                controller: _actionsController,
                 maxLines: 5,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -129,6 +165,7 @@ class _FourPageState extends State<FourPage> {
             SizedBox(height: 8.0),
             _buildAnimatedElement(
               TextField(
+                controller: _reporterNameController,
                 decoration: InputDecoration(
                   labelText: 'Nombre',
                   border: OutlineInputBorder(),
@@ -140,6 +177,7 @@ class _FourPageState extends State<FourPage> {
             SizedBox(height: 8.0),
             _buildAnimatedElement(
               TextField(
+                controller: _reporterPositionController,
                 decoration: InputDecoration(
                   labelText: 'Profesión/Cargo',
                   border: OutlineInputBorder(),
@@ -151,6 +189,7 @@ class _FourPageState extends State<FourPage> {
             SizedBox(height: 8.0),
             _buildAnimatedElement(
               TextField(
+                controller: _reporterPhoneController,
                 decoration: InputDecoration(
                   labelText: 'Teléfono o Ext.',
                   border: OutlineInputBorder(),
@@ -162,6 +201,7 @@ class _FourPageState extends State<FourPage> {
             SizedBox(height: 8.0),
             _buildAnimatedElement(
               TextField(
+                controller: _reporterEmailController,
                 decoration: InputDecoration(
                   labelText: 'Correo',
                   border: OutlineInputBorder(),
@@ -174,7 +214,8 @@ class _FourPageState extends State<FourPage> {
             Center(
               child: _buildAnimatedElement(
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await _saveForm();
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => FivePage()),
