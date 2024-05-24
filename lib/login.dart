@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tecnovigilancia/create.dart'; // Asegúrate de importar el archivo create.dart
-import 'package:tecnovigilancia/forgot.dart';
-import 'package:tecnovigilancia/onepage.dart';
+
+import 'adminpage.dart'; // Asegúrate de importar el archivo adminpage.dart
+import 'create.dart'; // Asegúrate de importar el archivo create.dart
+import 'forgot.dart';
+import 'onepage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -15,25 +18,38 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> _signInWithEmailAndPassword() async {
     try {
-      UserCredential userCredential =
-          await _auth.signInWithEmailAndPassword(
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      // Si el inicio de sesión es exitoso, puedes redirigir a la página deseada
+
       if (userCredential.user != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OnePage()),
-        );
+        // Obtener el rol del usuario desde Firestore
+        DocumentSnapshot userDoc = await _firestore.collection('users').doc(userCredential.user!.uid).get();
+        String role = userDoc['role'];
+
+        // Redirigir según el rol
+        if (role == 'Administrador') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AdminPage()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => OnePage()),
+          );
+        }
       }
     } catch (e) {
-      // Manejo de errores de inicio de sesión
       print('Error de inicio de sesión: $e');
-      // Puedes mostrar un diálogo o un mensaje de error aquí si lo deseas
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error de inicio de sesión.')),
+      );
     }
   }
 
