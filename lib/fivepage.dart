@@ -59,7 +59,7 @@ Future<void> _uploadImage() async {
 
     if (_image != null) {
       String userEmail = user.email!;
-      Reference ref = FirebaseStorage.instance.ref().child('uploads/$userEmail/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      Reference ref = FirebaseStorage.instance.ref().child('images/$userEmail.jpg');
       UploadTask uploadTask = ref.putFile(_image!);
       
       uploadTask.whenComplete(() async {

@@ -52,6 +52,7 @@ class _InitializationScreenState extends State<InitializationScreen> {
           projectId: 'appbiomedica-811aa',
           appId: '1:144810312542:android:b39f7e411cea83ec8805cf',
           messagingSenderId: '144810312542',
+          storageBucket:  'gs://appbiomedica-811aa.appspot.com',
         ),
       );
       Navigator.pushReplacement(
