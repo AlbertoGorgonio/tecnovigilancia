@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'treepage.dart';
@@ -20,6 +21,8 @@ class _SecondPageState extends State<SecondPage> {
   TextEditingController _incidentDescriptionController = TextEditingController();
   bool _isVisible = false;
 
+
+
   @override
   void initState() {
     super.initState();
@@ -33,24 +36,33 @@ class _SecondPageState extends State<SecondPage> {
     });
   }
 
-  Future<void> _saveForm() async {
-    try {
-      await FirebaseFirestore.instance.collection('Formulario').doc('Registros').set({
-        'servicio_lugar_incidente': _selectedArea,
-        'deteccion_accidente': _selectedDetectionPeriod,
-        'profesional_salud_afectado': _selectedHealthProfessionalAffected,
-        'nombre_profesional_salud': _healthProfessionalNameController.text,
-        'nombre_paciente': _patientNameController.text,
-        'edad_paciente': _patientAgeController.text,
-        'genero_paciente': _selectedGender,
-        'tipo_incidente': _selectedIncidentType,
-        'descripcion_incidente': _incidentDescriptionController.text,
-      });
-      print('Datos guardados correctamente');
-    } catch (e) {
-      print('Error al guardar los datos: $e');
+Future<void> _saveForm() async {
+  try {
+    // Obtén el correo electrónico del usuario autenticado
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print('Usuario no autenticado');
+      return;
     }
+    String userEmail = user.email!;
+
+    // Actualiza o crea el documento con los datos del formulario
+    await FirebaseFirestore.instance.collection('Formulario').doc(userEmail).set({
+      'servicio_lugar_incidente': _selectedArea,
+      'deteccion_accidente': _selectedDetectionPeriod,
+      'profesional_salud_afectado': _selectedHealthProfessionalAffected,
+      'nombre_profesional_salud': _healthProfessionalNameController.text,
+      'nombre_paciente': _patientNameController.text,
+      'edad_paciente': _patientAgeController.text,
+      'genero_paciente': _selectedGender,
+      'tipo_incidente': _selectedIncidentType,
+      'descripcion_incidente': _incidentDescriptionController.text,
+    }, SetOptions(merge: true));
+    print('Datos guardados correctamente');
+  } catch (e) {
+    print('Error al guardar los datos: $e');
   }
+}
 
   Widget _buildAnimatedElement(Widget child, int index, Alignment alignment) {
     return TweenAnimationBuilder<double>(

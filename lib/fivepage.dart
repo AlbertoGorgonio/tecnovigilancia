@@ -49,38 +49,51 @@ class _FivePageState extends State<FivePage> {
     });
   }
 
-  Future<void> _uploadImage() async {
-    try {
-      if (_image != null) {
-        Reference ref = FirebaseStorage.instance.ref().child('uploads/${FirebaseAuth.instance.currentUser!.uid}/${DateTime.now().millisecondsSinceEpoch}.jpg');
-        UploadTask uploadTask = ref.putFile(_image!);
-        
-        uploadTask.whenComplete(() async {
-          try {
-            String imageURL = await ref.getDownloadURL();
-            await _saveForm(imageURL);
-            print('Image uploaded successfully.');
-          } catch (e) {
-            print('Error getting download URL: $e');
-          }
-        });
-      } else {
-        print('No image selected.');
-      }
-    } catch (e) {
-      print('Error uploading image: $e');
+Future<void> _uploadImage() async {
+  try {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print('Usuario no autenticado');
+      return;
     }
+
+    if (_image != null) {
+      String userEmail = user.email!;
+      Reference ref = FirebaseStorage.instance.ref().child('uploads/$userEmail/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      UploadTask uploadTask = ref.putFile(_image!);
+      
+      uploadTask.whenComplete(() async {
+        try {
+          String imageURL = await ref.getDownloadURL();
+          await _saveForm(imageURL);
+          print('Imagen subida exitosamente.');
+        } catch (e) {
+          print('Error al obtener la URL de descarga: $e');
+        }
+      });
+    } else {
+      print('No se ha seleccionado ninguna imagen.');
+    }
+  } catch (e) {
+    print('Error al cargar la imagen: $e');
   }
+}
 
   Future<void> _saveForm(String imageUrl) async {
     try {
-      await FirebaseFirestore.instance.collection('Formulario').doc('Registros').set({
+      User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print('Usuario no autenticado');
+      return;
+    }
+    String userEmail = user.email!;
+      await FirebaseFirestore.instance.collection('Formulario').doc(userEmail).set({
         'nombre_reportante': _reporterNameController.text,
         'profesion_cargo': _selectedProfession,
         'telefono_ext': _reporterPhoneController.text,
         'correo1': _reporterEmailController.text,
         'imagen_url': imageUrl,
-      });
+      }, SetOptions(merge: true));
       print('Datos guardados correctamente');
     } catch (e) {
       print('Error al guardar los datos: $e');

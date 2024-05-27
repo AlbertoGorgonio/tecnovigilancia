@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'fourpage.dart'; // Importa FourPage
@@ -19,7 +20,7 @@ class _TreePageState extends State<TreePage> {
   TextEditingController _brandController = TextEditingController();
   TextEditingController _lotOrSeriesController = TextEditingController();
   bool _isVisible = false;
-
+  
   @override
   void initState() {
     super.initState();
@@ -68,7 +69,15 @@ class _TreePageState extends State<TreePage> {
 
   Future<void> _saveForm() async {
     try {
-      await FirebaseFirestore.instance.collection('Formulario').doc('Registros').set({
+      User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print('Usuario no autenticado');
+      return;
+    }
+    String userEmail = user.email!;
+
+
+      await FirebaseFirestore.instance.collection('Formulario').doc(userEmail).set({
         'desenlace_aplica': _selectedOption,
         'causa_detectada': _selectedOption == 'Sí' ? _selectedCause : null,
         'nombre_dispositivo': _deviceNameController.text,
@@ -78,7 +87,7 @@ class _TreePageState extends State<TreePage> {
         'marca': _brandController.text,
         'lote_o_serie': _lotOrSeriesController.text,
         'fecha_caducidad': _selectedExpiryDate?.toIso8601String(),
-      });
+      },SetOptions(merge: true));
       print('Datos guardados correctamente');
     } catch (e) {
       print('Error al guardar los datos: $e');

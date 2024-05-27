@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'fivepage.dart';
@@ -16,7 +17,7 @@ class _FourPageState extends State<FourPage> {
   TextEditingController _reporterPositionController = TextEditingController();
   TextEditingController _reporterPhoneController = TextEditingController();
   TextEditingController _reporterEmailController = TextEditingController();
-
+  
   @override
   void initState() {
     super.initState();
@@ -51,14 +52,21 @@ class _FourPageState extends State<FourPage> {
 
   Future<void> _saveForm() async {
     try {
-      await FirebaseFirestore.instance.collection('Formulario').doc('Registros').set({
+      User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      print('Usuario no autenticado');
+      return;
+    }
+    String userEmail = user.email!;
+
+      await FirebaseFirestore.instance.collection('Formulario').doc(userEmail).set({
         'gestion_realizada': _managementController.text,
         'acciones_correctivas_preventivas': _actionsController.text,
         'nombre_reportante': _reporterNameController.text,
         'profesion_cargo': _reporterPositionController.text,
         'telefono_ext': _reporterPhoneController.text,
         'correo': _reporterEmailController.text,
-      });
+      }, SetOptions(merge: true));
       print('Datos guardados correctamente');
     } catch (e) {
       print('Error al guardar los datos: $e');

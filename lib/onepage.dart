@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'secondpage.dart';
@@ -12,6 +13,7 @@ class _OnePageState extends State<OnePage> {
   TextEditingController _fechaNotificacionController = TextEditingController();
   TextEditingController _fechaIncidenteController = TextEditingController();
   bool _isVisible = false;
+  String _userEmail = '';
 
   @override
   void initState() {
@@ -19,6 +21,7 @@ class _OnePageState extends State<OnePage> {
     _setFechaNotificacion();
     _generateCodigoReporte();
     _animateElements();
+    _getUserEmail();
   }
 
   void _setFechaNotificacion() {
@@ -47,6 +50,15 @@ class _OnePageState extends State<OnePage> {
     return "0$n";
   }
 
+  Future<void> _getUserEmail() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        _userEmail = user.email ?? '';
+      });
+    }
+  }
+
   @override
   void dispose() {
     _fechaNotificacionController.dispose();
@@ -56,7 +68,7 @@ class _OnePageState extends State<OnePage> {
 
   Future<void> _saveForm() async {
     try {
-      await FirebaseFirestore.instance.collection('Formulario').doc('Registros').set({
+      await FirebaseFirestore.instance.collection('Formulario').doc(_userEmail).set({
         'codigo_reporte': _codigoReporte,
         'fecha_notificacion': _fechaNotificacionController.text,
         'fecha_incidente': _fechaIncidenteController.text,
