@@ -54,7 +54,7 @@ class _AdminPageState extends State<AdminPage> {
                           },
                           child: Icon(
                             Icons.arrow_back_ios,
-                            color: Colors.black,
+                            color: Colors.blue,
                           ),
                         ),
                         GestureDetector(
@@ -77,7 +77,7 @@ class _AdminPageState extends State<AdminPage> {
                       Text(
                         'REPORTES TECNOVIGILANCIA',
                         style: TextStyle(
-                          fontSize: 22, // Texto más pequeño
+                          fontSize: 21, // Texto más pequeño
                           fontWeight: FontWeight.bold,
                           color: Colors.red, // Texto en rojo negritas
                         ),
@@ -235,7 +235,7 @@ class _AdminPageState extends State<AdminPage> {
   }
 }
 
-// Pantalla de carga personalizada
+// Pantalla de carga personalizada con efecto de foco azul deslumbrante
 class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -245,9 +245,20 @@ class LoadingScreen extends StatelessWidget {
         child: Container(
           width: 200,
           height: 10,
-          child: LinearProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-            backgroundColor: Colors.blue.withOpacity(0.3),
+          child: TweenAnimationBuilder(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: Duration(seconds: 1),
+            builder: (context, value, child) {
+              return LinearProgressIndicator(
+                value: value,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                backgroundColor: Colors.blue.withOpacity(0.3),
+              );
+            },
+            onEnd: () {
+              // Repetir la animación
+              (context as Element).markNeedsBuild();
+            },
           ),
         ),
       ),
