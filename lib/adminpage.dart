@@ -23,7 +23,7 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   _startLoading() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
     setState(() {
       _isLoading = false;
     });
@@ -152,7 +152,7 @@ class _AdminPageState extends State<AdminPage> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        backgroundColor: Colors.blue.shade50,
+                                        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(20.0),
                                         ),
