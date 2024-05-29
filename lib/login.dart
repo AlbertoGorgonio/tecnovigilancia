@@ -181,9 +181,19 @@ class _LoginPageState extends State<LoginPage> {
     return TextField(
       controller: controller,
       obscureText: obscureText,
+      cursorColor: Colors.blue, // Aquí se cambia el color del cursor a azul
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: Icon(icon),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+        ),
       ),
     );
   }

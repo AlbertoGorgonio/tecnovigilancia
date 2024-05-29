@@ -125,14 +125,7 @@ class _AdminPageState extends State<AdminPage> {
                             elevation: 3,
                             margin: EdgeInsets.symmetric(vertical: 10),
                             child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [Colors.blue.shade900, Colors.blue.shade300],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(4.0),
-                              ),
+                              color: Colors.blue, // Azul sólido sin gradiente
                               child: ListTile(
                                 title: Text(
                                   reporteTitle,
@@ -159,7 +152,7 @@ class _AdminPageState extends State<AdminPage> {
                                         title: Text(
                                           'Detalles del Reporte',
                                           style: TextStyle(
-                                            color: Colors.blue.shade900,
+                                            color: Colors.blue,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -183,7 +176,7 @@ class _AdminPageState extends State<AdminPage> {
                                           TextButton(
                                             child: Text(
                                               'Generar PDF',
-                                              style: TextStyle(color: Colors.blue.shade900),
+                                              style: TextStyle(color: Colors.blue),
                                             ),
                                             onPressed: () async {
                                               final pdf = pw.Document();
@@ -210,7 +203,7 @@ class _AdminPageState extends State<AdminPage> {
                                           TextButton(
                                             child: Text(
                                               'Cerrar',
-                                              style: TextStyle(color: Colors.blue.shade900),
+                                              style: TextStyle(color: Colors.blue),
                                             ),
                                             onPressed: () {
                                               Navigator.of(context).pop();
@@ -235,31 +228,33 @@ class _AdminPageState extends State<AdminPage> {
   }
 }
 
-// Pantalla de carga personalizada con efecto de foco azul deslumbrante
+// Pantalla de carga personalizada con barra de progreso lineal y mensaje "Cargando..."
 class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Container(
-          width: 200,
-          height: 10,
-          child: TweenAnimationBuilder(
-            tween: Tween(begin: 0.0, end: 1.0),
-            duration: Duration(seconds: 1),
-            builder: (context, value, child) {
-              return LinearProgressIndicator(
-                value: value,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 200,
+              child: LinearProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                 backgroundColor: Colors.blue.withOpacity(0.3),
-              );
-            },
-            onEnd: () {
-              // Repetir la animación
-              (context as Element).markNeedsBuild();
-            },
-          ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Cargando...',
+              style: TextStyle(
+                color: Colors.blue.shade900,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );
