@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:tecnovigilancia/src/providers/push_notifications_provider.dart';
 
 import 'login.dart';
 
@@ -39,8 +40,9 @@ class _InitializationScreenState extends State<InitializationScreen> {
   }
 
   Future<void> _initialize() async {
-    await Future.delayed(Duration(seconds: 3)); // Espera 3 segundos antes de inicializar Firebase
-    _initializeFirebase();
+    await Future.delayed(Duration(seconds: 3));
+    await _initializeFirebase();
+    _initNotifications(); // Inicia el proveedor de notificaciones
   }
 
   Future<void> _initializeFirebase() async {
@@ -66,6 +68,12 @@ class _InitializationScreenState extends State<InitializationScreen> {
         MaterialPageRoute(builder: (context) => ErrorScreen()),
       );
     }
+  }
+
+  // Inicia el proveedor de notificaciones
+  void _initNotifications() {
+    final pushProvider = PushNotificationProvider();
+    pushProvider.initNotifications();
   }
 
   @override
