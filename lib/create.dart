@@ -60,6 +60,52 @@ class _CreatePageState extends State<CreatePage> {
     }
   }
 
+  void _showAdminCodeNotification() {
+    final overlay = Overlay.of(context);
+    late OverlayEntry overlayEntry;  // Declarar 'overlayEntry' antes de usarla
+
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 50.0,
+        left: MediaQuery.of(context).size.width * 0.1,
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Si no cuentas con el código, comunicate con los desarrolladores.',
+                  style: TextStyle(color: Colors.white),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: Icon(Icons.close, color: Colors.white),
+                    onPressed: () {
+                      overlayEntry.remove();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    overlay?.insert(overlayEntry);
+    Future.delayed(Duration(seconds: 3), () {
+      overlayEntry.remove();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +147,12 @@ class _CreatePageState extends State<CreatePage> {
                   border: OutlineInputBorder(),
                   labelText: 'Email',
                   prefixIcon: Icon(Icons.email),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  labelStyle: TextStyle(color: Colors.black),
                 ),
+                cursorColor: Colors.blue,
               ),
               const SizedBox(height: 10),
               TextField(
@@ -111,7 +162,12 @@ class _CreatePageState extends State<CreatePage> {
                   border: OutlineInputBorder(),
                   labelText: 'Contraseña',
                   prefixIcon: Icon(Icons.lock),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  labelStyle: TextStyle(color: Colors.black),
                 ),
+                cursorColor: Colors.blue,
               ),
               const SizedBox(height: 10),
               TextField(
@@ -121,7 +177,12 @@ class _CreatePageState extends State<CreatePage> {
                   border: OutlineInputBorder(),
                   labelText: 'Confirmar Contraseña',
                   prefixIcon: Icon(Icons.lock),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  labelStyle: TextStyle(color: Colors.black),
                 ),
+                cursorColor: Colors.blue,
               ),
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
@@ -146,6 +207,10 @@ class _CreatePageState extends State<CreatePage> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Seleccionar Rol',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  labelStyle: TextStyle(color: Colors.black),
                 ),
               ),
               if (_selectedRole == 'Administrador') ...[
@@ -153,11 +218,17 @@ class _CreatePageState extends State<CreatePage> {
                 TextField(
                   controller: _adminCodeController,
                   obscureText: true,
+                  onTap: _showAdminCodeNotification,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Código de Administrador',
                     prefixIcon: Icon(Icons.security),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
+                    labelStyle: TextStyle(color: Colors.black),
                   ),
+                  cursorColor: Colors.blue,
                 ),
               ],
               const SizedBox(height: 20),
