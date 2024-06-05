@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'adminpage.dart'; // Asegúrate de importar el archivo adminpage.dart
-import 'create.dart'; // Asegúrate de importar el archivo create.dart
+import 'adminpage.dart';
+import 'create.dart';
 import 'forgot.dart';
 import 'onepage.dart';
 
@@ -28,11 +28,11 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (userCredential.user != null) {
-        // Obtener el rol del usuario desde Firestore
+
         DocumentSnapshot userDoc = await _firestore.collection('users').doc(userCredential.user!.uid).get();
         String role = userDoc['role'];
 
-        // Redirigir según el rol
+
         if (role == 'Administrador') {
           Navigator.pushReplacement(
             context,
@@ -181,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
     return TextField(
       controller: controller,
       obscureText: obscureText,
-      cursorColor: Colors.blue, // Aquí se cambia el color del cursor a azul
+      cursorColor: Colors.blue,
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: Icon(icon),

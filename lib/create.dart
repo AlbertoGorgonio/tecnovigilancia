@@ -34,14 +34,14 @@ class _CreatePageState extends State<CreatePage> {
     }
 
     try {
-      // Crear usuario en Firebase Authentication
+
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
       if (userCredential.user != null) {
-        // Guardar datos en Firestore
+
         await _firestore.collection('users').doc(userCredential.user!.uid).set({
           'email': _emailController.text.trim(),
           'contraseña': _passwordController.text.trim(),
@@ -62,7 +62,7 @@ class _CreatePageState extends State<CreatePage> {
 
   void _showAdminCodeNotification() {
     final overlay = Overlay.of(context);
-    late OverlayEntry overlayEntry;  // Declarar 'overlayEntry' antes de usarla
+    late OverlayEntry overlayEntry;
 
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned(

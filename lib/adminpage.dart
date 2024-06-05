@@ -68,7 +68,7 @@ class _AdminPageState extends State<AdminPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20), // Espacio para separar el título de los reportes
+                SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: Row(
@@ -77,17 +77,17 @@ class _AdminPageState extends State<AdminPage> {
                       Text(
                         'REPORTES TECNOVIGILANCIA',
                         style: TextStyle(
-                          fontSize: 21, // Texto más pequeño
+                          fontSize: 21,
                           fontWeight: FontWeight.bold,
-                          color: Colors.red, // Texto en rojo negritas
+                          color: Colors.red,
                         ),
                       ),
-                      SizedBox(width: 10), // Espacio entre el texto y el icono
-                      Icon(Icons.report, color: Colors.red), // Icono de reporte en rojo
+                      SizedBox(width: 10),
+                      Icon(Icons.report, color: Colors.red),
                     ],
                   ),
                 ),
-                SizedBox(height: 20), // Espacio para separar el título de los reportes
+                SizedBox(height: 20),
                 Expanded(
                   child: StreamBuilder(
                     stream: FirebaseFirestore.instance.collection('Formulario').snapshots(),
@@ -105,7 +105,7 @@ class _AdminPageState extends State<AdminPage> {
                           child: Text(
                             'No hay reportes registrados',
                             style: TextStyle(
-                              color: Colors.blue, // Texto en azul
+                              color: Colors.blue,
                             ),
                           ),
                         );
@@ -117,21 +117,21 @@ class _AdminPageState extends State<AdminPage> {
                         itemBuilder: (context, index) {
                           QueryDocumentSnapshot document = snapshot.data!.docs[index];
                           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-                          int numeroReporte = index + 1; // Obtener el número de reporte automáticamente
+                          int numeroReporte = index + 1;
                           String reporteTitle = 'Reporte $numeroReporte';
-                          String fechaNotificacion = data['fecha_notificacion'] ?? 'Fecha no disponible'; // Obtener la fecha de notificación del documento
+                          String fechaNotificacion = data['fecha_notificacion'] ?? 'Fecha no disponible';
 
                           return Card(
                             elevation: 3,
                             margin: EdgeInsets.symmetric(vertical: 10),
                             child: Container(
-                              color: Colors.blue, // Azul sólido sin gradiente
+                              color: Colors.blue,
                               child: ListTile(
                                 title: Text(
                                   reporteTitle,
                                   style: TextStyle(
-                                    color: Colors.white, // Texto blanco
-                                    fontWeight: FontWeight.bold, // Texto en negritas
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 subtitle: Text(
@@ -165,7 +165,7 @@ class _AdminPageState extends State<AdminPage> {
                                                 child: Text(
                                                   '${e.key}: ${e.value}',
                                                   style: TextStyle(
-                                                    color: Colors.black, // Texto en negro para facilitar la lectura
+                                                    color: Colors.black,
                                                   ),
                                                 ),
                                               );
@@ -228,7 +228,7 @@ class _AdminPageState extends State<AdminPage> {
   }
 }
 
-// Pantalla de carga personalizada con barra de progreso lineal y mensaje "Cargando..."
+
 class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -261,7 +261,7 @@ class LoadingScreen extends StatelessWidget {
   }
 }
 
-// Pantalla de error personalizada
+
 class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

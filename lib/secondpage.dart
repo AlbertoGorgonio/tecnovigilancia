@@ -36,7 +36,7 @@ class _SecondPageState extends State<SecondPage> {
 
   Future<void> _saveForm() async {
     try {
-      // Obtén el correo electrónico del usuario autenticado
+
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         print('Usuario no autenticado');
@@ -44,7 +44,7 @@ class _SecondPageState extends State<SecondPage> {
       }
       String userEmail = user.email!;
 
-      // Actualiza o crea el documento con los datos del formulario
+
       await FirebaseFirestore.instance.collection('Formulario').doc(userEmail).set({
         'servicio_lugar_incidente': _selectedArea,
         'deteccion_accidente': _selectedDetectionPeriod,
@@ -113,11 +113,11 @@ class _SecondPageState extends State<SecondPage> {
       body: SingleChildScrollView(
   padding: EdgeInsets.all(16.0),
   child: Column(
-    mainAxisAlignment: MainAxisAlignment.center, // Centra verticalmente los elementos en la columna
-    crossAxisAlignment: CrossAxisAlignment.stretch, // Estira los elementos horizontalmente
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Container(
-        alignment: Alignment.center, // Centra la imagen dentro del contenedor
+        alignment: Alignment.center,
         child: _buildAnimatedElement(
           Image.asset(
             'assets/images/medical.gif',

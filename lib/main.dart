@@ -42,7 +42,7 @@ class _InitializationScreenState extends State<InitializationScreen> {
   Future<void> _initialize() async {
     await Future.delayed(Duration(seconds: 3));
     await _initializeFirebase();
-    _initNotifications(); // Inicia el proveedor de notificaciones
+    _initNotifications();
   }
 
   Future<void> _initializeFirebase() async {
@@ -62,7 +62,7 @@ class _InitializationScreenState extends State<InitializationScreen> {
         MaterialPageRoute(builder: (context) => MyHomePage()),
       );
     } catch (e) {
-      // Manejar el error de inicialización de Firebase
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => ErrorScreen()),
@@ -70,7 +70,7 @@ class _InitializationScreenState extends State<InitializationScreen> {
     }
   }
 
-  // Inicia el proveedor de notificaciones
+
   void _initNotifications() {
     final pushProvider = PushNotificationProvider();
     pushProvider.initNotifications();
@@ -82,7 +82,7 @@ class _InitializationScreenState extends State<InitializationScreen> {
   }
 }
 
-// Pantalla de carga personalizada
+
 class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -112,7 +112,7 @@ class LoadingScreen extends StatelessWidget {
   }
 }
 
-// Pantalla de error personalizada
+
 class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

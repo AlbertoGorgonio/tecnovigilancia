@@ -36,7 +36,7 @@ class _EstadisticaPageState extends State<EstadisticaPage> with SingleTickerProv
           Icons.arrow_back_ios, // Flecha de iOS
           color: Colors.blue, // Color azul
         ),
-        // Puedes agregar más propiedades al AppBar según sea necesario
+
       ),
       body: Center(
         child: Column(
