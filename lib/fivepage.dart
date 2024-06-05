@@ -354,8 +354,8 @@ Future<void> _uploadImage() async {
                         duration: Duration(seconds: 1),
                         child: Image.asset(
                           'assets/images/send.png',
-                          width: 200,
-                          height: 200,
+                          width: 150,
+                          height: 150,
                         ),
                       ),
                     ),

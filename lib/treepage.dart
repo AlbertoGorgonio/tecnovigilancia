@@ -70,12 +70,11 @@ class _TreePageState extends State<TreePage> {
   Future<void> _saveForm() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      print('Usuario no autenticado');
-      return;
-    }
-    String userEmail = user.email!;
-
+      if (user == null) {
+        print('Usuario no autenticado');
+        return;
+      }
+      String userEmail = user.email!;
 
       await FirebaseFirestore.instance.collection('Formulario').doc(userEmail).set({
         'desenlace_aplica': _selectedOption,
@@ -87,7 +86,7 @@ class _TreePageState extends State<TreePage> {
         'marca': _brandController.text,
         'lote_o_serie': _lotOrSeriesController.text,
         'fecha_caducidad': _selectedExpiryDate?.toIso8601String(),
-      },SetOptions(merge: true));
+      }, SetOptions(merge: true));
       print('Datos guardados correctamente');
     } catch (e) {
       print('Error al guardar los datos: $e');
@@ -130,6 +129,14 @@ class _TreePageState extends State<TreePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Center(
+              child: Image.asset(
+                'assets/images/gloves.png',
+                width: 200,
+                height: 200,
+              ),
+            ),
+            SizedBox(height: 16.0),
             _buildAnimatedElement(
               Text(
                 'Desenlace(s) que aplique(n)',

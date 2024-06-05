@@ -53,11 +53,11 @@ class _FourPageState extends State<FourPage> {
   Future<void> _saveForm() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      print('Usuario no autenticado');
-      return;
-    }
-    String userEmail = user.email!;
+      if (user == null) {
+        print('Usuario no autenticado');
+        return;
+      }
+      String userEmail = user.email!;
 
       await FirebaseFirestore.instance.collection('Formulario').doc(userEmail).set({
         'gestion_realizada': _managementController.text,
@@ -169,6 +169,14 @@ class _FourPageState extends State<FourPage> {
               ),
               4,
               Alignment.centerLeft,
+            ),
+            SizedBox(height: 8.0),
+            Center(
+              child: Image.asset(
+                'assets/images/ident.png',
+                width: 300,
+                height: 300,
+              ),
             ),
             SizedBox(height: 8.0),
             _buildAnimatedElement(

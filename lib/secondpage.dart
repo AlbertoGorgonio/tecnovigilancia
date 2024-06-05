@@ -21,8 +21,6 @@ class _SecondPageState extends State<SecondPage> {
   TextEditingController _incidentDescriptionController = TextEditingController();
   bool _isVisible = false;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -36,33 +34,33 @@ class _SecondPageState extends State<SecondPage> {
     });
   }
 
-Future<void> _saveForm() async {
-  try {
-    // Obtén el correo electrónico del usuario autenticado
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      print('Usuario no autenticado');
-      return;
-    }
-    String userEmail = user.email!;
+  Future<void> _saveForm() async {
+    try {
+      // Obtén el correo electrónico del usuario autenticado
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print('Usuario no autenticado');
+        return;
+      }
+      String userEmail = user.email!;
 
-    // Actualiza o crea el documento con los datos del formulario
-    await FirebaseFirestore.instance.collection('Formulario').doc(userEmail).set({
-      'servicio_lugar_incidente': _selectedArea,
-      'deteccion_accidente': _selectedDetectionPeriod,
-      'profesional_salud_afectado': _selectedHealthProfessionalAffected,
-      'nombre_profesional_salud': _healthProfessionalNameController.text,
-      'nombre_paciente': _patientNameController.text,
-      'edad_paciente': _patientAgeController.text,
-      'genero_paciente': _selectedGender,
-      'tipo_incidente': _selectedIncidentType,
-      'descripcion_incidente': _incidentDescriptionController.text,
-    }, SetOptions(merge: true));
-    print('Datos guardados correctamente');
-  } catch (e) {
-    print('Error al guardar los datos: $e');
+      // Actualiza o crea el documento con los datos del formulario
+      await FirebaseFirestore.instance.collection('Formulario').doc(userEmail).set({
+        'servicio_lugar_incidente': _selectedArea,
+        'deteccion_accidente': _selectedDetectionPeriod,
+        'profesional_salud_afectado': _selectedHealthProfessionalAffected,
+        'nombre_profesional_salud': _healthProfessionalNameController.text,
+        'nombre_paciente': _patientNameController.text,
+        'edad_paciente': _patientAgeController.text,
+        'genero_paciente': _selectedGender,
+        'tipo_incidente': _selectedIncidentType,
+        'descripcion_incidente': _incidentDescriptionController.text,
+      }, SetOptions(merge: true));
+      print('Datos guardados correctamente');
+    } catch (e) {
+      print('Error al guardar los datos: $e');
+    }
   }
-}
 
   Widget _buildAnimatedElement(Widget child, int index, Alignment alignment) {
     return TweenAnimationBuilder<double>(
@@ -113,16 +111,28 @@ Future<void> _saveForm() async {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildAnimatedElement(
-              Text(
-                'Servicio o lugar donde ocurre el incidente',
+  padding: EdgeInsets.all(16.0),
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center, // Centra verticalmente los elementos en la columna
+    crossAxisAlignment: CrossAxisAlignment.stretch, // Estira los elementos horizontalmente
+    children: [
+      Container(
+        alignment: Alignment.center, // Centra la imagen dentro del contenedor
+        child: _buildAnimatedElement(
+          Image.asset(
+            'assets/images/medical.gif',
+            height: 200.0,
+          ),
+          0,
+          Alignment.center,
+        ),
+      ),
+      SizedBox(height: 16.0),
+      _buildAnimatedElement(
+        Text('Servicio o lugar donde ocurre el incidente',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              0,
+              1,
               Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
@@ -144,7 +154,7 @@ Future<void> _saveForm() async {
                   });
                 },
               ),
-              1,
+              2,
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
@@ -159,7 +169,7 @@ Future<void> _saveForm() async {
                   ),
                 ],
               ),
-              2,
+              3,
               Alignment.centerLeft,
             ),
             SizedBox(height: 16.0),
@@ -211,7 +221,7 @@ Future<void> _saveForm() async {
                   ),
                 ],
               ),
-              3,
+              4,
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
@@ -220,7 +230,7 @@ Future<void> _saveForm() async {
                 '¿Profesional de la salud se ve afectado?',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              4,
+              5,
               Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
@@ -251,7 +261,7 @@ Future<void> _saveForm() async {
                   Text('No'),
                 ],
               ),
-              5,
+              6,
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
@@ -260,7 +270,7 @@ Future<void> _saveForm() async {
                 'Nombre del Profesional de la Salud',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              6,
+              7,
               Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
@@ -271,7 +281,7 @@ Future<void> _saveForm() async {
                   border: OutlineInputBorder(),
                 ),
               ),
-              7,
+              8,
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
@@ -290,7 +300,7 @@ Future<void> _saveForm() async {
                   ),
                 ),
               ),
-              8,
+              9,
               Alignment.centerLeft,
             ),
             SizedBox(height: 16.0),
@@ -302,7 +312,7 @@ Future<void> _saveForm() async {
                   labelText: 'Nombre completo',
                 ),
               ),
-              9,
+              10,
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
@@ -314,7 +324,7 @@ Future<void> _saveForm() async {
                   labelText: 'Edad',
                 ),
               ),
-              10,
+              11,
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
@@ -336,7 +346,7 @@ Future<void> _saveForm() async {
                   });
                 },
               ),
-              11,
+              12,
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
@@ -345,7 +355,7 @@ Future<void> _saveForm() async {
                 'Descripción de Incidente / Incidente Adverso',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              12,
+              13,
               Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
@@ -384,7 +394,7 @@ Future<void> _saveForm() async {
                   ),
                 ],
               ),
-              13,
+              14,
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
@@ -397,7 +407,7 @@ Future<void> _saveForm() async {
                   labelText: 'Describir Incidente',
                 ),
               ),
-              14,
+              15,
               Alignment.centerRight,
             ),
             SizedBox(height: 24.0),
@@ -422,7 +432,7 @@ Future<void> _saveForm() async {
                     ),
                   ),
                 ),
-                15,
+                16,
                 Alignment.center,
               ),
             ),
