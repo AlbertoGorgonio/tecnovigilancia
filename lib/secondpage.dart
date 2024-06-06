@@ -36,14 +36,12 @@ class _SecondPageState extends State<SecondPage> {
 
   Future<void> _saveForm() async {
     try {
-
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         print('Usuario no autenticado');
         return;
       }
       String userEmail = user.email!;
-
 
       await FirebaseFirestore.instance.collection('Formulario').doc(userEmail).set({
         'servicio_lugar_incidente': _selectedArea,
@@ -111,25 +109,26 @@ class _SecondPageState extends State<SecondPage> {
         ),
       ),
       body: SingleChildScrollView(
-  padding: EdgeInsets.all(16.0),
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Container(
-        alignment: Alignment.center,
-        child: _buildAnimatedElement(
-          Image.asset(
-            'assets/images/medical.gif',
-            height: 200.0,
-          ),
-          0,
-          Alignment.center,
-        ),
-      ),
-      SizedBox(height: 16.0),
-      _buildAnimatedElement(
-        Text('Servicio o lugar donde ocurre el incidente',
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              child: _buildAnimatedElement(
+                Image.asset(
+                  'assets/images/medical.png',
+                  height: 300.0,
+                ),
+                0,
+                Alignment.center,
+              ),
+            ),
+            SizedBox(height: 16.0),
+            _buildAnimatedElement(
+              Text(
+                'Servicio o lugar donde ocurre el incidente',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               1,
@@ -142,7 +141,18 @@ class _SecondPageState extends State<SecondPage> {
                   border: OutlineInputBorder(),
                   labelText: 'Seleccionar un área',
                 ),
-                items: <String>['Área 1', 'Área 2', 'Área 3'].map((String value) {
+                items: <String>[
+                  'Sala de Emergencias',
+                  'Unidad de Cuidados Intensivos',
+                  'Quirófano',
+                  'Sala de Partos',
+                  'Pediatría',
+                  'Psiquiatría',
+                  'Radiología',
+                  'Laboratorio',
+                  'Farmacia',
+                  'Oncología',
+                ].map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),

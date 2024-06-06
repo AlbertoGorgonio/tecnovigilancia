@@ -133,8 +133,8 @@ class _TreePageState extends State<TreePage> {
               child: _buildAnimatedElement(
                 Image.asset(
                   'assets/images/gloves.png',
-                  width: 200,
-                  height: 200,
+                  width: 250,
+                  height: 250,
                 ),
                 0,
                 Alignment.center,
