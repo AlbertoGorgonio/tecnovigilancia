@@ -20,7 +20,7 @@ class _TreePageState extends State<TreePage> {
   TextEditingController _brandController = TextEditingController();
   TextEditingController _lotOrSeriesController = TextEditingController();
   bool _isVisible = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -130,10 +130,14 @@ class _TreePageState extends State<TreePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Image.asset(
-                'assets/images/gloves.png',
-                width: 200,
-                height: 200,
+              child: _buildAnimatedElement(
+                Image.asset(
+                  'assets/images/gloves.png',
+                  width: 200,
+                  height: 200,
+                ),
+                0,
+                Alignment.center,
               ),
             ),
             SizedBox(height: 16.0),
@@ -142,7 +146,7 @@ class _TreePageState extends State<TreePage> {
                 'Desenlace(s) que aplique(n)',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              0,
+              1,
               Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
@@ -172,7 +176,7 @@ class _TreePageState extends State<TreePage> {
                   });
                 },
               ),
-              1,
+              2,
               Alignment.centerRight,
             ),
             SizedBox(height: 16.0),
@@ -212,7 +216,7 @@ class _TreePageState extends State<TreePage> {
                   ),
                 ],
               ),
-              2,
+              3,
               Alignment.centerLeft,
             ),
             SizedBox(height: 16.0),
@@ -243,7 +247,7 @@ class _TreePageState extends State<TreePage> {
                     });
                   },
                 ),
-                3,
+                4,
                 Alignment.centerRight,
               ),
             SizedBox(height: 16.0),
@@ -252,7 +256,7 @@ class _TreePageState extends State<TreePage> {
                 'Datos del Dispositivo Médico',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              4,
+              5,
               Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
@@ -264,7 +268,7 @@ class _TreePageState extends State<TreePage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              5,
+              6,
               Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
@@ -276,7 +280,7 @@ class _TreePageState extends State<TreePage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              6,
+              7,
               Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
@@ -288,7 +292,7 @@ class _TreePageState extends State<TreePage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              7,
+              8,
               Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
@@ -300,7 +304,7 @@ class _TreePageState extends State<TreePage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              8,
+              9,
               Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
@@ -312,7 +316,7 @@ class _TreePageState extends State<TreePage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              9,
+              10,
               Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
@@ -324,7 +328,7 @@ class _TreePageState extends State<TreePage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              10,
+              11,
               Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
@@ -354,7 +358,7 @@ class _TreePageState extends State<TreePage> {
                       : "${_selectedExpiryDate!.day}/${_selectedExpiryDate!.month}/${_selectedExpiryDate!.year}",
                 ),
               ),
-              11,
+              12,
               Alignment.centerRight,
             ),
             SizedBox(height: 24.0),
@@ -379,7 +383,7 @@ class _TreePageState extends State<TreePage> {
                     ),
                   ),
                 ),
-                12,
+                13,
                 Alignment.center,
               ),
             ),

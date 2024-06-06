@@ -17,7 +17,7 @@ class _FourPageState extends State<FourPage> {
   TextEditingController _reporterPositionController = TextEditingController();
   TextEditingController _reporterPhoneController = TextEditingController();
   TextEditingController _reporterEmailController = TextEditingController();
-  
+
   @override
   void initState() {
     super.initState();
@@ -171,12 +171,16 @@ class _FourPageState extends State<FourPage> {
               Alignment.centerLeft,
             ),
             SizedBox(height: 8.0),
-            Center(
-              child: Image.asset(
-                'assets/images/ident.png',
-                width: 300,
-                height: 300,
+            _buildAnimatedElement(
+              Center(
+                child: Image.asset(
+                  'assets/images/ident.png',
+                  width: 300,
+                  height: 300,
+                ),
               ),
+              5,
+              Alignment.center,
             ),
             SizedBox(height: 8.0),
             _buildAnimatedElement(
@@ -187,7 +191,7 @@ class _FourPageState extends State<FourPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              5,
+              6,
               Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
@@ -199,7 +203,7 @@ class _FourPageState extends State<FourPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              6,
+              7,
               Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
@@ -211,7 +215,7 @@ class _FourPageState extends State<FourPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              7,
+              8,
               Alignment.centerRight,
             ),
             SizedBox(height: 8.0),
@@ -223,7 +227,7 @@ class _FourPageState extends State<FourPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              8,
+              9,
               Alignment.centerRight,
             ),
             SizedBox(height: 24.0),
@@ -248,7 +252,7 @@ class _FourPageState extends State<FourPage> {
                     ),
                   ),
                 ),
-                9,
+                10,
                 Alignment.center,
               ),
             ),
