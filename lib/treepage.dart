@@ -20,11 +20,28 @@ class _TreePageState extends State<TreePage> {
   TextEditingController _brandController = TextEditingController();
   TextEditingController _lotOrSeriesController = TextEditingController();
   bool _isVisible = false;
+  int _currentIndex = 0;
+
+  // Añadimos un PageController
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
     _animateElements();
+    _pageController = PageController(viewportFraction: 0.8);
+  }
+
+  @override
+  void dispose() {
+    _deviceNameController.dispose();
+    _hraeiKeyController.dispose();
+    _sanitaryRegistrationNumberController.dispose();
+    _deviceClassificationController.dispose();
+    _brandController.dispose();
+    _lotOrSeriesController.dispose();
+    _pageController.dispose(); // Asegúrate de disponer del PageController
+    super.dispose();
   }
 
   void _animateElements() async {
@@ -94,18 +111,16 @@ class _TreePageState extends State<TreePage> {
   }
 
   @override
-  void dispose() {
-    _deviceNameController.dispose();
-    _hraeiKeyController.dispose();
-    _sanitaryRegistrationNumberController.dispose();
-    _deviceClassificationController.dispose();
-    _brandController.dispose();
-    _lotOrSeriesController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    List<String> imagePaths = [
+      'assets/images/1.png',
+      'assets/images/2.png',
+      'assets/images/3.png',
+      'assets/images/4.png',
+      'assets/images/5.png',
+      'assets/images/6.png',
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -251,6 +266,54 @@ class _TreePageState extends State<TreePage> {
                 Alignment.centerRight,
               ),
             SizedBox(height: 16.0),
+
+            // Menú carrusel de imágenes
+            _buildAnimatedElement(
+              Container(
+                height: 250,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: imagePaths.length,
+                  onPageChanged: (int index) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
+                  itemBuilder: (BuildContext context, int index) {
+                    return AnimatedBuilder(
+                      animation: _pageController,
+                      builder: (context, child) {
+                        double value = 1.0;
+                        if (_pageController.position.haveDimensions) {
+                          value = _pageController.page! - index;
+                          value = (1 - (value.abs() * 0.3)).clamp(0.0, 1.0);
+                        }
+                        return Center(
+                          child: SizedBox(
+                            height: Curves.easeOut.transform(value) * 200,
+                            width: Curves.easeOut.transform(value) * 200,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: AssetImage(imagePaths[index]),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              14,
+              Alignment.center,
+            ),
+            SizedBox(height: 16.0),
             _buildAnimatedElement(
               Text(
                 'Datos del Dispositivo Médico',
@@ -264,7 +327,7 @@ class _TreePageState extends State<TreePage> {
               TextField(
                 controller: _deviceNameController,
                 decoration: InputDecoration(
-                  labelText: 'Nombre del dispositivo medico',
+                  labelText: 'Nombre del dispositivo médico',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -288,7 +351,7 @@ class _TreePageState extends State<TreePage> {
               TextField(
                 controller: _sanitaryRegistrationNumberController,
                 decoration: InputDecoration(
-                  labelText: 'Numero de registro sanitario',
+                  labelText: 'Número de registro sanitario',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -300,7 +363,7 @@ class _TreePageState extends State<TreePage> {
               TextField(
                 controller: _deviceClassificationController,
                 decoration: InputDecoration(
-                  labelText: 'Clasificacion del dispositivo medico de acuerdo a su categoria de uso',
+                  labelText: 'Clasificación del dispositivo médico de acuerdo a su categoría de uso',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -339,19 +402,7 @@ class _TreePageState extends State<TreePage> {
                   labelText: 'Fecha de caducidad',
                   border: OutlineInputBorder(),
                 ),
-                onTap: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: _selectedExpiryDate ?? DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2101),
-                  );
-                  if (pickedDate != null) {
-                    setState(() {
-                      _selectedExpiryDate = pickedDate;
-                    });
-                  }
-                },
+                onTap: () => _selectDate(context),
                 controller: TextEditingController(
                   text: _selectedExpiryDate == null
                       ? ''
