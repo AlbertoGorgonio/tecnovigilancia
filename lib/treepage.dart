@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,16 +23,21 @@ class _TreePageState extends State<TreePage> {
   TextEditingController _brandController = TextEditingController();
   TextEditingController _lotOrSeriesController = TextEditingController();
   bool _isVisible = false;
-  int _currentIndex = 0;
+  bool _showForm = false; // Controla la visibilidad del formulario
 
-  // Añadimos un PageController
-  late PageController _pageController;
+  final List<String> imagePaths = [
+    'assets/images/ImagesOver/1.png',
+    'assets/images/ImagesOver/2.png',
+    'assets/images/ImagesOver/3.png',
+    'assets/images/ImagesOver/4.png',
+    'assets/images/ImagesOver/5.png',
+    'assets/images/ImagesOver/6.png',
+  ];
 
   @override
   void initState() {
     super.initState();
     _animateElements();
-    _pageController = PageController(viewportFraction: 0.8);
   }
 
   @override
@@ -40,7 +48,6 @@ class _TreePageState extends State<TreePage> {
     _deviceClassificationController.dispose();
     _brandController.dispose();
     _lotOrSeriesController.dispose();
-    _pageController.dispose(); // Asegúrate de disponer del PageController
     super.dispose();
   }
 
@@ -110,16 +117,33 @@ class _TreePageState extends State<TreePage> {
     }
   }
 
+  List<Widget> _buildImageWidgets() {
+    return imagePaths.map((path) {
+      return GestureDetector(
+        onTap: () {
+          setState(() {
+            _showForm = true;
+          });
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+          // Eliminamos el BoxDecoration para quitar el fondo gris y sombra.
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+            child: Image.asset(
+              path,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<String> imagePaths = [
-      'assets/images/1.png',
-      'assets/images/2.png',
-      'assets/images/3.png',
-      'assets/images/4.png',
-      'assets/images/5.png',
-      'assets/images/6.png',
-    ];
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -267,180 +291,163 @@ class _TreePageState extends State<TreePage> {
               ),
             SizedBox(height: 16.0),
 
-            // Menú carrusel de imágenes
-            _buildAnimatedElement(
-              Container(
-                height: 250,
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: imagePaths.length,
-                  onPageChanged: (int index) {
-                    setState(() {
-                      _currentIndex = index;
-                    });
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    return AnimatedBuilder(
-                      animation: _pageController,
-                      builder: (context, child) {
-                        double value = 1.0;
-                        if (_pageController.position.haveDimensions) {
-                          value = _pageController.page! - index;
-                          value = (1 - (value.abs() * 0.3)).clamp(0.0, 1.0);
-                        }
-                        return Center(
-                          child: SizedBox(
-                            height: Curves.easeOut.transform(value) * 200,
-                            width: Curves.easeOut.transform(value) * 200,
-                            child: child,
-                          ),
-                        );
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: AssetImage(imagePaths[index]),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              14,
-              Alignment.center,
-            ),
-            SizedBox(height: 16.0),
-            _buildAnimatedElement(
-              Text(
-                'Datos del Dispositivo Médico',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              5,
-              Alignment.centerLeft,
-            ),
-            SizedBox(height: 8.0),
-            _buildAnimatedElement(
-              TextField(
-                controller: _deviceNameController,
-                decoration: InputDecoration(
-                  labelText: 'Nombre del dispositivo médico',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              6,
-              Alignment.centerRight,
-            ),
-            SizedBox(height: 8.0),
-            _buildAnimatedElement(
-              TextField(
-                controller: _hraeiKeyController,
-                decoration: InputDecoration(
-                  labelText: 'Clave de HRAEI',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              7,
-              Alignment.centerRight,
-            ),
-            SizedBox(height: 8.0),
-            _buildAnimatedElement(
-              TextField(
-                controller: _sanitaryRegistrationNumberController,
-                decoration: InputDecoration(
-                  labelText: 'Número de registro sanitario',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              8,
-              Alignment.centerRight,
-            ),
-            SizedBox(height: 8.0),
-            _buildAnimatedElement(
-              TextField(
-                controller: _deviceClassificationController,
-                decoration: InputDecoration(
-                  labelText: 'Clasificación del dispositivo médico de acuerdo a su categoría de uso',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              9,
-              Alignment.centerRight,
-            ),
-            SizedBox(height: 8.0),
-            _buildAnimatedElement(
-              TextField(
-                controller: _brandController,
-                decoration: InputDecoration(
-                  labelText: 'Marca',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              10,
-              Alignment.centerRight,
-            ),
-            SizedBox(height: 8.0),
-            _buildAnimatedElement(
-              TextField(
-                controller: _lotOrSeriesController,
-                decoration: InputDecoration(
-                  labelText: 'Lote o Serie',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              11,
-              Alignment.centerRight,
-            ),
-            SizedBox(height: 8.0),
-            _buildAnimatedElement(
-              TextField(
-                readOnly: true,
-                decoration: InputDecoration(
-                  labelText: 'Fecha de caducidad',
-                  border: OutlineInputBorder(),
-                ),
-                onTap: () => _selectDate(context),
-                controller: TextEditingController(
-                  text: _selectedExpiryDate == null
-                      ? ''
-                      : "${_selectedExpiryDate!.day}/${_selectedExpiryDate!.month}/${_selectedExpiryDate!.year}",
-                ),
-              ),
-              12,
-              Alignment.centerRight,
-            ),
-            SizedBox(height: 24.0),
+            // CarouselSlider Widget Adaptado
             Center(
               child: _buildAnimatedElement(
-                ElevatedButton(
-                  onPressed: () async {
-                    await _saveForm();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => FourPage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                CarouselSlider(
+                  options: CarouselOptions(
+                    height: min(screenWidth / 2.9 * (17 / 9), screenHeight * .9),
+                    enlargeCenterPage: true,
+                    autoPlay: true,
+                    aspectRatio: 16 / 9,
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enableInfiniteScroll: true,
+                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    viewportFraction: 0.4, // Ajusta esta fracción para mostrar parcialmente las imágenes adyacentes
                   ),
-                  child: Text(
-                    'Continuar',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  items: _buildImageWidgets(),
                 ),
-                13,
+                5,
                 Alignment.center,
               ),
             ),
+
+            SizedBox(height: 16.0),
+            if (_showForm) ...[
+              _buildAnimatedElement(
+                Text(
+                  'Datos del Dispositivo Médico',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                6,
+                Alignment.centerLeft,
+              ),
+              SizedBox(height: 8.0),
+              _buildAnimatedElement(
+                TextField(
+                  controller: _deviceNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Nombre del dispositivo médico',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                7,
+                Alignment.centerRight,
+              ),
+              SizedBox(height: 8.0),
+              _buildAnimatedElement(
+                TextField(
+                  controller: _hraeiKeyController,
+                  decoration: InputDecoration(
+                    labelText: 'Clave de HRAEI',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                8,
+                Alignment.centerRight,
+              ),
+              SizedBox(height: 8.0),
+              _buildAnimatedElement(
+                TextField(
+                  controller: _sanitaryRegistrationNumberController,
+                  decoration: InputDecoration(
+                    labelText: 'Número de registro sanitario',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                9,
+                Alignment.centerRight,
+              ),
+              SizedBox(height: 8.0),
+              _buildAnimatedElement(
+                TextField(
+                  controller: _deviceClassificationController,
+                  decoration: InputDecoration(
+                    labelText: 'Clasificación del dispositivo médico de acuerdo a su categoría de uso',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                10,
+                Alignment.centerRight,
+              ),
+              SizedBox(height: 8.0),
+              _buildAnimatedElement(
+                TextField(
+                  controller: _brandController,
+                  decoration: InputDecoration(
+                    labelText: 'Marca',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                11,
+                Alignment.centerRight,
+              ),
+              SizedBox(height: 8.0),
+              _buildAnimatedElement(
+                TextField(
+                  controller: _lotOrSeriesController,
+                  decoration: InputDecoration(
+                    labelText: 'Lote o Serie',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                12,
+                Alignment.centerRight,
+              ),
+              SizedBox(height: 8.0),
+              _buildAnimatedElement(
+                TextField(
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Fecha de caducidad',
+                    border: OutlineInputBorder(),
+                  ),
+                  onTap: () => _selectDate(context),
+                  controller: TextEditingController(
+                    text: _selectedExpiryDate == null
+                        ? ''
+                        : "${_selectedExpiryDate!.day}/${_selectedExpiryDate!.month}/${_selectedExpiryDate!.year}",
+                  ),
+                ),
+                13,
+                Alignment.centerRight,
+              ),
+              SizedBox(height: 24.0),
+              Center(
+                child: _buildAnimatedElement(
+                  ElevatedButton(
+                    onPressed: () async {
+                      await _saveForm();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => FourPage()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: Text(
+                      'Continuar',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  14,
+                  Alignment.center,
+                ),
+              ),
+            ]
           ],
         ),
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: TreePage(),
+  ));
 }
