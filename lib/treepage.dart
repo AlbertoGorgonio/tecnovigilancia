@@ -127,12 +127,13 @@ class _TreePageState extends State<TreePage> {
         },
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
-          // Eliminamos el BoxDecoration para quitar el fondo gris y sombra.
           child: ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(15.0)),
             child: Image.asset(
               path,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain, // Ajusta la imagen a su aspecto original
+              width: 150,
+              height: 150,
             ),
           ),
         ),
@@ -172,8 +173,8 @@ class _TreePageState extends State<TreePage> {
               child: _buildAnimatedElement(
                 Image.asset(
                   'assets/images/gloves.png',
-                  width: 250,
-                  height: 250,
+                  width: 150,
+                  height: 150,
                 ),
                 0,
                 Alignment.center,
@@ -291,27 +292,43 @@ class _TreePageState extends State<TreePage> {
               ),
             SizedBox(height: 16.0),
 
-            // CarouselSlider Widget Adaptado
+            // Texto centrado con fuente estética y icono de touch
             Center(
-              child: _buildAnimatedElement(
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: min(screenWidth / 2.9 * (17 / 9), screenHeight * .9),
-                    enlargeCenterPage: true,
-                    autoPlay: true,
-                    aspectRatio: 16 / 9,
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enableInfiniteScroll: true,
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    viewportFraction: 0.4, // Ajusta esta fracción para mostrar parcialmente las imágenes adyacentes
-                  ),
-                  items: _buildImageWidgets(),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                children: [
+                Text(
+                'Seleccione Dispositivo',
+                style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
                 ),
-                5,
-                Alignment.center,
-              ),
-            ),
+                ),
+                  SizedBox(width: 8),
+                  Icon(Icons.touch_app, size: 45, color: Colors.blue),
+                    ],
+                    ),
+                      ),
 
+            // CarouselSlider ajustado
+            _buildAnimatedElement(
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: min(screenWidth / 2.9 * (17 / 9), screenHeight * .9),
+                  enlargeCenterPage: true,
+                  autoPlay: true,
+                  aspectRatio: 16 / 9,
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  enableInfiniteScroll: true,
+                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  viewportFraction: 0.4, // Ajusta esta fracción para mostrar parcialmente las imágenes adyacentes
+                ),
+                items: _buildImageWidgets(),
+              ),
+              5,
+              Alignment.center,
+            ),
             SizedBox(height: 16.0),
             if (_showForm) ...[
               _buildAnimatedElement(
